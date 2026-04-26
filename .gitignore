@@ -22,3 +22,29 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Build output
+/target/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code / Eclipse (in case teammates use them)
+.vscode/
+.project
+.classpath
+.settings/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Secrets — Firebase service account JSON, env files
+*-service-account.json
+serviceAccountKey.json
+.env
+.env.*
