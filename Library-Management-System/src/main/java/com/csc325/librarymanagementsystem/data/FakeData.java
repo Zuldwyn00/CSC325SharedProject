@@ -1,0 +1,169 @@
+package com.csc325.librarymanagementsystem.data;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.csc325.librarymangementsystem.model.Book;
+import com.csc325.librarymangementsystem.model.Loan;
+import com.csc325.librarymangementsystem.model.User;
+
+/**
+ * Sample books, users, and loans for testing without Firebase.
+ *
+ * These methods create fresh sample objects each time they are called, but
+ * the returned lists are read-only. If a test needs to add, remove, or update
+ * data, first copy the list into an ArrayList and change the copy.
+ *
+ * Example:
+ *     List<Book> books = new ArrayList<>(FakeData.getBooks());
+ *     List<Loan> loans = new ArrayList<>(FakeData.getLoans());
+ *     // Change books and loans here for the specific test case.
+ */
+public final class FakeData {
+
+    private FakeData() {
+    }
+
+    public static List<Book> getBooks() {
+        return List.of(
+                new Book("book-001", "9780141439518", "Pride and Prejudice",
+                        List.of("Jane Austen"), List.of("Classic", "Romance"), 4),
+                new Book("book-002", "9780061120084", "To Kill a Mockingbird",
+                        List.of("Harper Lee"), List.of("Classic", "Fiction"), 3),
+                new Book("book-003", "9780451524935", "1984",
+                        List.of("George Orwell"), List.of("Dystopian", "Science Fiction"), 0),
+                new Book("book-004", "9780743273565", "The Great Gatsby",
+                        List.of("F. Scott Fitzgerald"), List.of("Classic", "Fiction"), 5),
+                new Book("book-005", "9781503280786", "Moby Dick",
+                        List.of("Herman Melville"), List.of("Classic", "Adventure"), 1),
+                new Book("book-006", "9781594631931", "The Kite Runner",
+                        List.of("Khaled Hosseini"), List.of("Fiction", "Drama"), 3),
+                new Book("book-007", "9780375842207", "The Book Thief",
+                        List.of("Markus Zusak"), List.of("Historical Fiction", "Drama"), 2),
+                new Book("book-008", "9781400033416", "Beloved",
+                        List.of("Toni Morrison"), List.of("Historical Fiction", "Drama"), 2),
+                new Book("book-009", "9780156027328", "Life of Pi",
+                        List.of("Yann Martel"), List.of("Adventure", "Fiction"), 4),
+                new Book("book-010", "9780307387899", "The Road",
+                        List.of("Cormac McCarthy"), List.of("Dystopian", "Fiction"), 2),
+                new Book("book-011", "9780547928227", "The Hobbit",
+                        List.of("J.R.R. Tolkien"), List.of("Fantasy", "Adventure"), 1),
+                new Book("book-012", "9780590353427", "Harry Potter and the Sorcerer's Stone",
+                        List.of("J.K. Rowling"), List.of("Fantasy", "Young Adult"), 8),
+                new Book("book-013", "9780553593716", "A Game of Thrones",
+                        List.of("George R.R. Martin"), List.of("Fantasy", "Epic"), 3),
+                new Book("book-014", "9780756404741", "The Name of the Wind",
+                        List.of("Patrick Rothfuss"), List.of("Fantasy"), 2),
+                new Book("book-015", "9780441172719", "Dune",
+                        List.of("Frank Herbert"), List.of("Science Fiction", "Epic"), 0),
+                new Book("book-016", "9780553293357", "Foundation",
+                        List.of("Isaac Asimov"), List.of("Science Fiction"), 4),
+                new Book("book-017", "9780441569595", "Neuromancer",
+                        List.of("William Gibson"), List.of("Science Fiction", "Cyberpunk"), 2),
+                new Book("book-018", "9780553418026", "The Martian",
+                        List.of("Andy Weir"), List.of("Science Fiction"), 1),
+                new Book("book-019", "9780765342294", "Ender's Game",
+                        List.of("Orson Scott Card"), List.of("Science Fiction", "Young Adult"), 5),
+                new Book("book-020", "9780307474278", "The Da Vinci Code",
+                        List.of("Dan Brown"), List.of("Mystery", "Thriller"), 0),
+                new Book("book-021", "9780307588371", "Gone Girl",
+                        List.of("Gillian Flynn"), List.of("Mystery", "Thriller"), 3),
+                new Book("book-022", "9780307454546", "The Girl with the Dragon Tattoo",
+                        List.of("Stieg Larsson"), List.of("Mystery", "Thriller"), 2),
+                new Book("book-023", "9780062073488", "And Then There Were None",
+                        List.of("Agatha Christie"), List.of("Mystery", "Classic"), 1),
+                new Book("book-024", "9780440423218", "Outlander",
+                        List.of("Diana Gabaldon"), List.of("Romance", "Historical Fiction"), 4),
+                new Book("book-025", "9780143124542", "Me Before You",
+                        List.of("Jojo Moyes"), List.of("Romance", "Drama"), 3),
+                new Book("book-026", "9780062316097", "Sapiens: A Brief History of Humankind",
+                        List.of("Yuval Noah Harari"), List.of("Non-Fiction", "History"), 6),
+                new Book("book-027", "9780399590504", "Educated",
+                        List.of("Tara Westover"), List.of("Non-Fiction", "Memoir"), 3),
+                new Book("book-028", "9780735211292", "Atomic Habits",
+                        List.of("James Clear"), List.of("Non-Fiction", "Self-Help"), 0),
+                new Book("book-029", "9780374533557", "Thinking, Fast and Slow",
+                        List.of("Daniel Kahneman"), List.of("Non-Fiction", "Psychology"), 4),
+                new Book("book-030", "9781400052189", "The Immortal Life of Henrietta Lacks",
+                        List.of("Rebecca Skloot"), List.of("Non-Fiction", "Science"), 1),
+                new Book("book-031", "9781451648539", "Steve Jobs",
+                        List.of("Walter Isaacson"), List.of("Biography", "Non-Fiction"), 5),
+                new Book("book-032", "9781524763138", "Becoming",
+                        List.of("Michelle Obama"), List.of("Biography", "Memoir"), 7),
+                new Book("book-033", "9780132350884", "Clean Code",
+                        List.of("Robert C. Martin"), List.of("Computer Science", "Programming"), 0),
+                new Book("book-034", "9780201616224", "The Pragmatic Programmer",
+                        List.of("Andrew Hunt", "David Thomas"), List.of("Computer Science", "Programming"), 3),
+                new Book("book-035", "9780134685991", "Effective Java",
+                        List.of("Joshua Bloch"), List.of("Computer Science", "Programming"), 2),
+                new Book("book-036", "9780201633610", "Design Patterns: Elements of Reusable Object-Oriented Software",
+                        List.of("Erich Gamma", "Richard Helm", "Ralph Johnson", "John Vlissides"),
+                        List.of("Computer Science", "Programming"), 4),
+                new Book("book-037", "9780262033848", "Introduction to Algorithms",
+                        List.of("Thomas H. Cormen", "Charles E. Leiserson", "Ronald L. Rivest", "Clifford Stein"),
+                        List.of("Computer Science", "Programming"), 1),
+                new Book("book-038", "9780064400558", "Charlotte's Web",
+                        List.of("E.B. White"), List.of("Children", "Classic"), 6),
+                new Book("book-039", "9780064431781", "Where the Wild Things Are",
+                        List.of("Maurice Sendak"), List.of("Children", "Picture Book"), 5),
+                new Book("book-040", "9780517053614", "The Complete Works of William Shakespeare",
+                        List.of("William Shakespeare"), List.of("Classic", "Drama", "Poetry"), 0)
+        );
+    }
+
+    /**
+     * Each user covers a different login and checkout scenario:
+     * a power user at the 3-book limit, a moderate user, and a light user.
+     * {@code libraryId} and {@code libraryPin} are stored as {@code String}
+     *
+     * @return list of 3 fake users
+     */
+    public static List<User> getUsers() {
+        return List.of(
+                // Reason: alice has 3 active loans — exercises LIMIT_REACHED.
+                new User("user-001", "00012345", "alice@example.com", "1234"),
+                new User("user-002", "00067890", "bob@example.com",   "4321"),
+                new User("user-003", "00045678", "carol@example.com", "9999")
+        );
+    }
+
+    /**
+     *   Overdue (dueDate already passed, not returned)
+     *   Due soon (dueDate within the next few days, not returned)
+     *   Active normal (dueDate well in the future, not returned)
+     *   Returned (already closed out)
+     *
+     * @return immutable list of 10 fake loans
+     */
+    public static List<Loan> getLoans() {
+        return List.of(
+                // alice (user-001): 3 active loans → at the limit
+                // overdue → exercises NotificationService.sendOverdueAlerts.
+                new Loan("loan-001", "user-001", "book-001",
+                        LocalDate.of(2026, 3, 15), LocalDate.of(2026, 4, 15), false),
+                // due soon → exercises NotificationService.sendDueSoonAlerts.
+                new Loan("loan-002", "user-001", "book-005",
+                        LocalDate.of(2026, 4, 8),  LocalDate.of(2026, 4, 28), false),
+                new Loan("loan-003", "user-001", "book-011",
+                        LocalDate.of(2026, 4, 20), LocalDate.of(2026, 5, 10), false),
+                new Loan("loan-004", "user-001", "book-026",
+                        LocalDate.of(2026, 2, 10), LocalDate.of(2026, 2, 24), true),
+
+                // bob (user-002): 2 active loans, 1 returned
+                new Loan("loan-005", "user-002", "book-015",
+                        LocalDate.of(2026, 3, 20), LocalDate.of(2026, 4, 10), false),
+                new Loan("loan-006", "user-002", "book-035",
+                        LocalDate.of(2026, 4, 21), LocalDate.of(2026, 5, 8),  false),
+                new Loan("loan-007", "user-002", "book-020",
+                        LocalDate.of(2026, 1, 5),  LocalDate.of(2026, 1, 22), true),
+
+                // carol (user-003): 1 active loan, 2 returned
+                new Loan("loan-008", "user-003", "book-038",
+                        LocalDate.of(2026, 3, 1),  LocalDate.of(2026, 3, 15), true),
+                new Loan("loan-009", "user-003", "book-031",
+                        LocalDate.of(2026, 2, 15), LocalDate.of(2026, 2, 28), true),
+                new Loan("loan-010", "user-003", "book-024",
+                        LocalDate.of(2026, 4, 15), LocalDate.of(2026, 4, 29), false)
+        );
+    }
+}
