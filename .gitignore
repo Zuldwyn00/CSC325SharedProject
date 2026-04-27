@@ -25,6 +25,7 @@ replay_pid*
 
 # Build output
 /target/
+**/target/
 
 # IntelliJ
 .idea/
