@@ -4,5 +4,6 @@ module com.csc325.librarymanagementsystem {
 
 
     opens com.csc325.librarymanagementsystem to javafx.fxml;
+    opens com.csc325.librarymanagementsystem.controller to javafx.fxml;
     exports com.csc325.librarymanagementsystem;
 }

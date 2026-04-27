@@ -1,5 +1,5 @@
 package com.csc325.librarymanagementsystem.model;
-import java.util.list;
+import java.util.List;
 
 
 public class Book {
@@ -11,7 +11,7 @@ public class Book {
     private int quantity;
 
     public Book(String bookId, String isbn, String title,
-                List<String> authors, List<String> , int quantity) {
+                List<String> authors, List<String> genres, int quantity) {
         this.bookId = bookId;
         this.isbn = isbn;
         this.title = title;

@@ -3,9 +3,9 @@ package com.csc325.librarymanagementsystem.data;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.csc325.librarymangementsystem.model.Book;
-import com.csc325.librarymangementsystem.model.Loan;
-import com.csc325.librarymangementsystem.model.User;
+import com.csc325.librarymanagementsystem.model.Book;
+import com.csc325.librarymanagementsystem.model.Loan;
+import com.csc325.librarymanagementsystem.model.User;
 
 /**
  * Sample books, users, and loans for testing without Firebase.

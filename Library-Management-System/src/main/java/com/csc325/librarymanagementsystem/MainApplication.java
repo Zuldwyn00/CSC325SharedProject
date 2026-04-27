@@ -1,13 +1,8 @@
 package com.csc325.librarymanagementsystem;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import library.data.FirebaseContext;
-import library.service.EmailService;
-import library.service.NotificationService;
-
+import com.csc325.librarymanagementsystem.data.FirebaseContext;
+import com.csc325.librarymanagementsystem.service.EmailService;
+import com.csc325.librarymanagementsystem.service.NotificationService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -32,7 +27,6 @@ public class MainApplication extends Application {
     }
 
     private void scheduleNotifications(NotificationService notificationService,
-                                       FirebaseContext, firebase) {
-        return null;
+                                       FirebaseContext firebase) {
     }
 }
