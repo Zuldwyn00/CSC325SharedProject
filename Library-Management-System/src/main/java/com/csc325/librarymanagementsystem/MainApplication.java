@@ -1,14 +1,15 @@
 package com.csc325.librarymanagementsystem;
 
+import java.io.IOException;
+
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.service.EmailService;
 import com.csc325.librarymanagementsystem.service.NotificationService;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class MainApplication extends Application {
     @Override
