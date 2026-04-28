@@ -110,3 +110,15 @@ public class SearchService {
 
         return dp[a.length()][b.length()];
     }
+
+    public void printresults(List<Book> results, int max) {
+
+        for (int i = 0; i < max; i++) {
+            System.out.println(results.get(i).getTitle());
+            System.out.println(results.get(i).getAuthors());
+            System.out.println(results.get(i).getGenres());
+            System.out.println(results.get(i).getIsbn());
+            System.out.println(results.get(i).getQuantity());
+        }
+    }
+}
