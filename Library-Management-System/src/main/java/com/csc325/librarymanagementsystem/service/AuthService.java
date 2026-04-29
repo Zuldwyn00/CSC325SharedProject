@@ -6,6 +6,9 @@ import com.csc325.librarymanagementsystem.model.User;
 
 public class AuthService {
     public User authenticate(FirebaseContext firebase, String identifier, String pin) {
+
+        // identifier == (LibraryId || Email)
+
         for (User user : FakeData.getUsers()) {
             if (user.getLibraryId().equals(identifier) && user.getLibraryPin().equals(pin)) {
                 return user;
