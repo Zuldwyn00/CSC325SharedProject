@@ -1,5 +1,6 @@
 package com.csc325.librarymanagementsystem.service;
 
+import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.data.FakeData;
 
@@ -12,10 +13,12 @@ public class SearchService {
 
     private List<Book> books = new ArrayList<>();
     //this will have to be changed once we get Firebase working
-    public void loadTestData() {
+    public void loadfirebasedata(FirebaseContext fc) {
+
         books.clear();
-        books.addAll(FakeData.getBooks());
+        books.addAll(fc.getAllBooks());
     }
+
 
     public List<Book> search(String query, String type) {
 
@@ -113,12 +116,23 @@ public class SearchService {
 
     public void printresults(List<Book> results, int max) {
 
-        for (int i = 0; i < max; i++) {
-            System.out.println(results.get(i).getTitle());
-            System.out.println(results.get(i).getAuthors());
-            System.out.println(results.get(i).getGenres());
-            System.out.println(results.get(i).getIsbn());
-            System.out.println(results.get(i).getQuantity());
+        if (results == null || results.isEmpty()) {
+            System.out.println("No results found.");
+            return;
+        }
+
+        int limit = Math.min(max, results.size());
+
+        for (int i = 0; i < limit; i++) {
+            Book book = results.get(i);
+
+            System.out.println("----- Result " + (i + 1) + " -----");
+            System.out.println("Title: " + book.getTitle());
+            System.out.println("Authors: " + book.getAuthors());
+            System.out.println("Genres: " + book.getGenres());
+            System.out.println("ISBN: " + book.getIsbn());
+            System.out.println("Quantity: " + book.getQuantity());
+            System.out.println();
         }
     }
 }
