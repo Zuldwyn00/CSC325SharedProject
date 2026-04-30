@@ -25,6 +25,7 @@ public class LoginController {
 
     @FXML
     private void initialize() {
+
         loginButton.setOnAction(event -> {
             if (!username.getText().isEmpty() && !userPassword.getText().isEmpty()) {
                 try {
