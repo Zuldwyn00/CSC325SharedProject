@@ -49,3 +49,5 @@ Thumbs.db
 serviceAccountKey.json
 .env
 .env.*
+
+**/firebase/key.json
