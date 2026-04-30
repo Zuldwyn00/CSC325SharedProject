@@ -123,7 +123,7 @@ public final class FakeData {
                 // Reason: alice has 3 active loans — exercises LIMIT_REACHED.
                 new User("user-001", "00012345", "alice@example.com", "1234"),
                 new User("user-002", "00067890", "bob@example.com",   "4321"),
-                new User("user-003", "00045678", "carol@example.com", "9999")
+                new User("user-003", "00045678", "carol@example.com", "9999"),
                 new User("user-004", "00098765", "joe@example.com",   "1234") //user sharing pin with another, shouldnt be an issue since pin is linked to ID but for testing incase.
         );
     }
