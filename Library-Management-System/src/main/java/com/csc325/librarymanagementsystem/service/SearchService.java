@@ -12,7 +12,7 @@ import java.util.List;
 public class SearchService {
 
     private List<Book> books = new ArrayList<>();
-    //this will have to be changed once we get Firebase working
+
     public void loadfirebasedata(FirebaseContext fc) {
 
         books.clear();
