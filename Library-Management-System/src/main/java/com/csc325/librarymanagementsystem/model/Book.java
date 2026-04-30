@@ -3,14 +3,16 @@ import java.util.List;
 
 
 public class Book {
-    private final String bookId;
-    private final String isbn;
-    private final String title;
-    private final List<String> authors;
-    private final List<String> genres;
-    private final String coverImageUrl;
+    private String bookId;
+    private String isbn;
+    private String title;
+    private List<String> authors;
+    private List<String> genres;
+    private String coverImageUrl;
     private int quantity;
 
+    public Book() {
+    }
 
     public Book(String bookId, String isbn, String title,
                 List<String> authors, List<String> genres, String coverImageUrl, int quantity) {
@@ -21,9 +23,6 @@ public class Book {
         this.genres = genres;
         this.coverImageUrl = coverImageUrl;
         this.quantity = quantity;
-    }
-
-    public Book() {
     }
 
     public String getBookId() {
@@ -57,4 +56,22 @@ public class Book {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId='" + bookId + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", title='" + title + '\'' +
+                ", authors=" + authors +
+                ", genres=" + genres +
+                ", coverImageUrl='" + coverImageUrl + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
+
+
+
 }
+
+

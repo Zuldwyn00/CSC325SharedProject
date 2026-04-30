@@ -2,14 +2,9 @@ package com.csc325.librarymanagementsystem.data;
 
 
 import com.google.api.core.ApiFuture;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-
-import com.google.firebase.cloud.FirestoreClient;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +20,7 @@ import com.csc325.librarymanagementsystem.model.Loan;
 
 public class FirebaseContext {
     private final String BOOKS_COLLECTION = "books";
-    private static Firestore db; //static so that FirebaseContext always uses the same db rather than per-class instantiation
+    private final Firestore db; //static so that FirebaseContext always uses the same db rather than per-class instantiation
 
     // Fake data, remove later
     private final List<Book> books = new ArrayList<>(FakeData.getBooks());
@@ -86,29 +81,7 @@ public class FirebaseContext {
     }
 
     public FirebaseContext() {
-        initializeFirebase();
-    }
-
-    private void initializeFirebase() {
-        // Only initialize if there isn't already an active app instance
-        if (FirebaseApp.getApps().isEmpty()) {
-            try {
-                FileInputStream serviceAccount =
-                        new FileInputStream("src/main/resources/com.csc325.librarymanagementsystem/firebase/key.json");
-
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                        .build();
-
-                FirebaseApp.initializeApp(options);
-                db = FirestoreClient.getFirestore();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                System.exit(1);
-            }
-        } else if (db == null) {
-            db = FirestoreClient.getFirestore();
-        }
+        this.db = FirebaseInitializer.getFirestore();
     }
 
 
