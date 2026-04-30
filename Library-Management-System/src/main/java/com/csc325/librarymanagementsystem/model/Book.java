@@ -8,15 +8,18 @@ public class Book {
     private final String title;
     private final List<String> authors;
     private final List<String> genres;
+    private final String coverImageUrl;
     private int quantity;
 
+
     public Book(String bookId, String isbn, String title,
-                List<String> authors, List<String> genres, int quantity) {
+                List<String> authors, List<String> genres, String coverImageUrl, int quantity) {
         this.bookId = bookId;
         this.isbn = isbn;
         this.title = title;
         this.authors = authors;
         this.genres = genres;
+        this.coverImageUrl = coverImageUrl;
         this.quantity = quantity;
     }
 
@@ -42,6 +45,10 @@ public class Book {
 
     public List<String> getAuthors() {
         return authors;
+    }
+
+    public String getCoverImageUrl() {
+        return coverImageUrl;
     }
 
     public void setQuantity(int quantity) {
