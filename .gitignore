@@ -47,5 +47,6 @@ Thumbs.db
 # Secrets — Firebase service account JSON, env files
 *-service-account.json
 serviceAccountKey.json
+key.json
 .env
 .env.*
