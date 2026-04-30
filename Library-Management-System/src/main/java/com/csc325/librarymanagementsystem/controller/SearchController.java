@@ -3,15 +3,12 @@ package com.csc325.librarymanagementsystem.controller;
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.service.SearchService;
-import com.csc325.librarymanagementsystem.service.SearchType;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class SearchController {
@@ -21,10 +18,13 @@ public class SearchController {
     private ChoiceBox<String> SearchTypeChoice;
 
     @FXML
-    private ListView<String> resultsList;
+    private Button searchButton;
 
     @FXML
-    private Button searchButton;
+    private ImageView bookImage;
+
+    @FXML
+    private ListView<Book> resultsList;
 
     @FXML
     private void initialize() {
@@ -33,27 +33,61 @@ public class SearchController {
                 "Title",
                 "Author",
                 "Genre",
-                "ISBN"
+                "Isbn"
         );
 
-        // optional: set default value
         SearchTypeChoice.setValue("Title");
+
+        resultsList.setCellFactory(listView -> new ListCell<>() {
+            private final ImageView imageView = new ImageView();
+            private final Label textLabel = new Label();
+            private final HBox row = new HBox(15);
+
+            {
+                imageView.setFitWidth(80);
+                imageView.setFitHeight(115);
+                imageView.setPreserveRatio(true);
+
+                textLabel.setWrapText(true);
+
+                row.getChildren().addAll(textLabel, imageView);
+            }
+
+            @Override
+            protected void updateItem(Book book, boolean empty) {
+                super.updateItem(book, empty);
+
+                if (empty || book == null) {
+                    setGraphic(null);
+                } else {
+                    Image image = new Image(
+                            getClass().getResource("/com/csc325/librarymanagementsystem/images/Minecraft.png").toExternalForm()
+                    );
+
+                    imageView.setImage(image);
+
+                    textLabel.setText(
+                            "Title: " + book.getTitle() + "\n" +
+                                    "Authors: " + book.getAuthors() + "\n" +
+                                    "Genres: " + book.getGenres() + "\n" +
+                                    "ISBN: " + book.getIsbn() + "\n" +
+                                    "Quantity: " + book.getQuantity()
+                    );
+
+                    setGraphic(row);
+                }
+            }
+        });
     }
     public void displayResults(List<Book> results) {
 
         resultsList.getItems().clear();
 
-        for (Book book : results) {
-
-            String item =
-                    "Title: " + book.getTitle() + "\n" +
-                            "Authors: " + book.getAuthors() + "\n" +
-                            "Genres: " + book.getGenres() + "\n" +
-                            "ISBN: " + book.getIsbn() + "\n" +
-                            "Quantity: " + book.getQuantity();
-
-            resultsList.getItems().add(item);
+        if (results == null || results.isEmpty()) {
+            return;
         }
+
+        resultsList.getItems().addAll(results);
     }
 
 
