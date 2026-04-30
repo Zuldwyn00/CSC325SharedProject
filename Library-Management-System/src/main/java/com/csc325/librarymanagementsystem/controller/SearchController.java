@@ -4,10 +4,14 @@ import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.service.SearchService;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.util.List;
 
