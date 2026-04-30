@@ -1,11 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.MainController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.MainController">
    <children>
-      <Label layoutX="192.0" layoutY="117.0" text="Hey!!" />
-      <Button fx:id="debugbutton" layoutX="316.0" layoutY="113.0" mnemonicParsing="false" onAction="#ondebug" text="LoginDebug" />
+      <BorderPane prefHeight="400.0" prefWidth="600.0">
+         <center>
+            <VBox prefHeight="265.0" prefWidth="420.0" spacing="10.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="FavBookBotton" mnemonicParsing="false" prefHeight="26.0" prefWidth="928.0" text="My Favorite Books" />
+                  <Button fx:id="bookSavedButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="868.0" text="Book Saved" />
+                  <Button fx:id="ReadLaterButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="887.0" text="Read Later" />
+                  <Button fx:id="RecentViewButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="1004.0" text="Recently view" />
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </VBox>
+         </center>
+         <left>
+            <Region prefHeight="303.0" prefWidth="90.0" BorderPane.alignment="CENTER" />
+         </left>
+         <right>
+            <Region prefHeight="303.0" prefWidth="90.0" BorderPane.alignment="CENTER" />
+         </right>
+         <bottom>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Region prefHeight="35.0" prefWidth="600.0" />
+                  <HBox alignment="CENTER" prefHeight="133.0" prefWidth="600.0" spacing="16.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="130.0" prefWidth="180.0" spacing="6.0" style="-fx-border-color: #D1D5DB; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                           <children>
+                              <Region prefHeight="20.0" prefWidth="146.0" />
+                              <Label text="Most Popular Book" />
+                              <Label style="-fx-font-size: 11px;" text="Book of the Day" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="87.0" prefWidth="180.0" spacing="6.0" style="-fx-border-color: #D1D5DB; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16;">
+                           <children>
+                              <Region prefHeight="20.0" prefWidth="146.0" />
+                              <Label text="Author's Pick" />
+                              <Label fx:id="featuredAuthorLabel" style="-fx-font-size: 11px;" text="Author's Name" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </bottom>
+         <top>
+            <VBox prefHeight="65.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Region prefHeight="25.0" prefWidth="600.0" />
+                  <HBox prefHeight="81.0" prefWidth="600.0">
+                     <children>
+                        <Region prefHeight="61.0" prefWidth="7.0" />
+                        <Button fx:id="profileButton" mnemonicParsing="false" text="Profile" />
+                        <Region prefHeight="61.0" prefWidth="129.0" />
+                        <Label prefHeight="38.0" prefWidth="222.0" text="Welcome to our Library" textAlignment="CENTER">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                        <Region prefHeight="269.0" prefWidth="39.0" />
+                        <Button fx:id="notificationButton" mnemonicParsing="false" text="Notification" />
+                        <Region prefHeight="269.0" prefWidth="4.0" />
+                        <Button fx:id="searchBotton" mnemonicParsing="false" onAction="#ondebug" text="Search" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </top>
+      </BorderPane>
    </children>
 </Pane>

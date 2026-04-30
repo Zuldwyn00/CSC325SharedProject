@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 public class MainController {
 
     @FXML
-    private Button debugbutton;
+    private Button searchBotton;
 
     @FXML
     private void ondebug() {
@@ -22,7 +22,7 @@ public class MainController {
 
             Parent root = loader.load();
 
-            Stage stage = (Stage) debugbutton.getScene().getWindow();
+            Stage stage = (Stage) searchBotton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
 
