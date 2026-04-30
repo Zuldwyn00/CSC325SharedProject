@@ -108,5 +108,23 @@ public class SearchController {
 
     }
 
+    @FXML
+    private Button backToScreenButton;
+
+    @FXML
+    private void onBackToScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/csc325/librarymanagementsystem/MainScreen.fxml")
+            );
+            Parent root = loader.load();
+            Stage stage = (Stage) backToScreenButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
