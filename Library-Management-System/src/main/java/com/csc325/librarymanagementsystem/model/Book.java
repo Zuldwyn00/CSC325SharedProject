@@ -23,6 +23,9 @@ public class Book {
         this.quantity = quantity;
     }
 
+    public Book() {
+    }
+
     public String getBookId() {
         return bookId;
     }

@@ -1,6 +1,10 @@
 module com.csc325.librarymanagementsystem {
     requires javafx.controls;
     requires javafx.fxml;
+    requires firebase.admin;
+    requires google.cloud.firestore;
+    requires com.google.auth.oauth2;
+    requires com.google.api.apicommon;
 
 
     opens com.csc325.librarymanagementsystem to javafx.fxml;

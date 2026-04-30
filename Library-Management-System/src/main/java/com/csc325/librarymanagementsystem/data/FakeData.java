@@ -162,7 +162,7 @@ public final class FakeData {
                         LocalDate.of(2026, 3, 1),  LocalDate.of(2026, 3, 15), true),
                 new Loan("loan-009", "user-003", "book-031",
                         LocalDate.of(2026, 2, 15), LocalDate.of(2026, 2, 28), true),
-                new Loan("loan-010", "user-003", "book-024",
+                new Loan("loan-010", "user-003", "book-020",
                         LocalDate.of(2026, 4, 15), LocalDate.of(2026, 4, 29), false)
         );
     }
