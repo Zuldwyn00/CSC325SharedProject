@@ -6,8 +6,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FirebaseInitializer {
 
@@ -30,8 +30,12 @@ public class FirebaseInitializer {
             return;
         }
 
-        try (FileInputStream serviceAccount =
-                     new FileInputStream("src/main/resources/com.csc325.librarymanagementsystem/firebase/key.json")) {
+        try (InputStream serviceAccount = FirebaseInitializer.class.getResourceAsStream(
+                "/com/csc325/librarymanagementsystem/firebase/key.json")) {
+
+            if (serviceAccount == null) {
+                throw new IOException("Firebase key resource not found");
+            }
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
