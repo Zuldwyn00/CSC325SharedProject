@@ -2,12 +2,10 @@ package com.csc325.librarymanagementsystem.data;
 
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +41,33 @@ public class FirebaseContext {
             System.err.println("Error retrieving books: " + e.getMessage());
         }
         return bookList;
+    }
+
+    public boolean addBook(List<Book> newBooks) {
+        if (newBooks == null || newBooks.isEmpty()) {
+            return false;
+        }
+
+        boolean addedBook = false;
+
+        for (Book book : newBooks) {
+            if (book == null || book.getBookId() == null || book.getBookId().isBlank()) {
+                throw new IllegalArgumentException("bookId cannot be null or blank.");
+            }
+
+            DocumentReference bookDocument = db.collection(BOOKS_COLLECTION).document(book.getBookId());
+            try {
+                bookDocument.create(book).get();
+                addedBook = true;
+            } catch (ExecutionException | InterruptedException e) {
+                System.err.println("Error adding book " + book.getBookId() + ": " + e.getMessage());
+            }
+        }
+        return addedBook;
+    }
+
+    public boolean addBook(Book book) {
+        return addBook(List.of(book));
     }
 
     public Book getBookById(String bookId) {
