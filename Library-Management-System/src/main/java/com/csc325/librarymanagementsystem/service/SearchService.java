@@ -2,7 +2,6 @@ package com.csc325.librarymanagementsystem.service;
 
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
-import com.csc325.librarymanagementsystem.data.FakeData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +19,21 @@ public class SearchService {
     }
 
 
-    public List<Book> search(String query, String type) {
+    public List<Book> search(String query, SearchType type) {
 
         List<Book> results = new ArrayList<>();
 
-        if (query == null || query.isEmpty() || books == null) {
+        if (query == null || query.isEmpty() || type == null || books == null) {
             return results;
         }
 
         query = query.trim().toLowerCase();
-        type = type.trim().toLowerCase();
         //huge switch case that filters the search
         for (Book book : books) {
 
-            switch (type.toLowerCase()) {
+            switch (type) {
 
-                case "title": {
+                case TITLE: {
                     String[] queryWords = query.split("\\s+");
                     String[] titleWords = book.getTitle().toLowerCase().split("\\s+");
 
@@ -57,7 +55,7 @@ public class SearchService {
                     break;
                 }
 
-                case "author": {
+                case AUTHOR: {
                     for (String author : book.getAuthors()) {
                         if (author.toLowerCase().contains(query)
                                 || levenshtein(query, author.toLowerCase()) <= 2) {
@@ -69,7 +67,7 @@ public class SearchService {
                     break;
                 }
 
-                case "genre": {
+                case GENRE: {
                     for (String genre : book.getGenres()) {
                         if (genre.toLowerCase().contains(query)) {
                             results.add(book);
@@ -80,7 +78,7 @@ public class SearchService {
                     break;
                 }
 
-                case "isbn": {
+                case ISBN: {
                     if (book.getIsbn().equals(query)) {
                         results.add(book);
                     }

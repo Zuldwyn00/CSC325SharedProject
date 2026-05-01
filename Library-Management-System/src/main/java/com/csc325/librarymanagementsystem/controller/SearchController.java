@@ -3,6 +3,7 @@ package com.csc325.librarymanagementsystem.controller;
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.service.SearchService;
+import com.csc325.librarymanagementsystem.service.SearchType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +20,7 @@ public class SearchController {
 
     public javafx.scene.control.TextField SearchTextField;
     @FXML
-    private ChoiceBox<String> SearchTypeChoice;
+    private ChoiceBox<SearchType> SearchTypeChoice;
 
     @FXML
     private Button searchButton;
@@ -33,14 +34,9 @@ public class SearchController {
     @FXML
     private void initialize() {
 
-        SearchTypeChoice.getItems().addAll(
-                "Title",
-                "Author",
-                "Genre",
-                "Isbn"
-        );
+        SearchTypeChoice.getItems().addAll(SearchType.values());
 
-        SearchTypeChoice.setValue("Title");
+        SearchTypeChoice.setValue(SearchType.TITLE);
 
         resultsList.setCellFactory(listView -> new ListCell<>() {
             private final ImageView imageView = new ImageView();
@@ -97,7 +93,7 @@ public class SearchController {
 
     @FXML
     private void searchButtonOnAction(javafx.event.ActionEvent  event) {
-        String type = SearchTypeChoice.getValue();
+        SearchType type = SearchTypeChoice.getValue();
         String searchText = SearchTextField.getText();
 
         SearchService searchService = new SearchService();
