@@ -51,7 +51,7 @@ public class FirebaseContext {
             if (!document.exists()) {
                 return null;
             }
-
+    
             Book book = document.toObject(Book.class);
             book.setBookId(document.getId()); // firestore document id is the book id but doesnt actually set the bookId field, so must set manually
             return book;
@@ -75,7 +75,7 @@ public class FirebaseContext {
 
             DocumentReference bookDocument = db.collection(BOOKS_COLLECTION).document(book.getBookId());
             try {
-                bookDocument.create(book).get();
+                bookDocument.create(book).get(); //firebase already detects duplicate Document ID's, no need to have a manual check
                 addedBook = true;
             } catch (ExecutionException | InterruptedException e) {
                 System.err.println("Error adding book " + book.getBookId() + ": " + e.getMessage());
