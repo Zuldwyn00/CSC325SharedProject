@@ -3,6 +3,7 @@ package com.csc325.librarymanagementsystem.data;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -43,6 +44,24 @@ public class FirebaseContext {
         return bookList;
     }
 
+    public Book getBookById(String bookId) {
+        if (bookId == null || bookId.isBlank()) {return null;}
+
+        try {
+            DocumentSnapshot document = db.collection(BOOKS_COLLECTION).document(bookId).get().get();
+            if (!document.exists()) {
+                return null;
+            }
+
+            Book book = document.toObject(Book.class);
+            book.setBookId(document.getId()); // firestore document id is the book id but doesnt actually set the bookId field, so must set manually
+            return book;
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error retrieving book " + bookId + ": " + e.getMessage());
+        }
+        return null;
+    }
+
     public boolean addBook(List<Book> newBooks) {
         if (newBooks == null || newBooks.isEmpty()) {
             return false;
@@ -66,17 +85,9 @@ public class FirebaseContext {
         return addedBook;
     }
 
+    //overloaded method to add a single book rather than a list of books
     public boolean addBook(Book book) {
         return addBook(List.of(book));
-    }
-
-    public Book getBookById(String bookId) {
-        if (bookId == null) {return null;}
-
-        for (Book book: books) {
-            if (bookId.equals(book.getBookId())) {return book;}
-        }
-        return null;
     }
 
     public boolean adjustStock(String bookId, int amount) {
