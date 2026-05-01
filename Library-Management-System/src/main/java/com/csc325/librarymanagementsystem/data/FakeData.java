@@ -140,22 +140,22 @@ public final class FakeData {
         return List.of(
                 // alice (user-001): 3 active loans → at the limit
                 // overdue → exercises NotificationService.sendOverdueAlerts.
-                new Loan("loan-001", "user-001", "book-001",
+                new Loan("loan-00001", "user-001", "book-001",
                         LocalDate.of(2026, 3, 15), LocalDate.of(2026, 3, 29), false),
                 // due soon → exercises NotificationService.sendDueSoonAlerts.
-                new Loan("loan-002", "user-001", "book-005",
+                new Loan("loan-00002", "user-001", "book-005",
                         LocalDate.of(2026, 4, 8),  LocalDate.of(2026, 4, 22), false),
-                new Loan("loan-003", "user-001", "book-011",
+                new Loan("loan-00003", "user-001", "book-011",
                         LocalDate.of(2026, 4, 20), LocalDate.of(2026, 5, 4), false),
-                new Loan("loan-004", "user-001", "book-026",
+                new Loan("loan-00004", "user-001", "book-026",
                         LocalDate.of(2026, 2, 10), LocalDate.of(2026, 2, 24), true),
 
                 // bob (user-002): 2 active loans, 1 returned
-                new Loan("loan-005", "user-002", "book-015",
+                new Loan("loan-00005", "user-002", "book-015",
                         LocalDate.of(2026, 3, 20), LocalDate.of(2026, 4, 3), false),
-                new Loan("loan-006", "user-002", "book-035",
+                new Loan("loan-00006", "user-002", "book-035",
                         LocalDate.of(2026, 4, 21), LocalDate.of(2026, 5, 5),  false),
-                new Loan("loan-007", "user-002", "book-020",
+                new Loan("loan-00007", "user-002", "book-020",
                         LocalDate.of(2026, 1, 5),  LocalDate.of(2026, 1, 19), true),
 
                 // carol (user-003): 1 active loan, 2 returned
