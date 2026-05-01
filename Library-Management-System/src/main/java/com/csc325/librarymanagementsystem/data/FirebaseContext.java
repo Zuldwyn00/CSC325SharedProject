@@ -22,7 +22,6 @@ public class FirebaseContext {
     private final Firestore db; //static so that FirebaseContext always uses the same db rather than per-class instantiation
 
     // Fake data, remove later
-    private final List<Book> books = new ArrayList<>(FakeData.getBooks());
     private final List<User> users = new ArrayList<>(FakeData.getUsers());
     private final List<Loan> loans = new ArrayList<>(FakeData.getLoans());
 
@@ -85,6 +84,7 @@ public class FirebaseContext {
         return addedBook;
     }
 
+    //@Overload
     //overloaded method to add a single book rather than a list of books
     public boolean addBook(Book book) {
         return addBook(List.of(book));
