@@ -30,14 +30,12 @@ public class FirebaseContext {
     public List<Book> getAllBooks() {
         List<Book> bookList = new ArrayList<>();
         try {
-            // Get a reference to the collection and fetch all documents
             ApiFuture<QuerySnapshot> query = db.collection(BOOKS_COLLECTION).get();
-            QuerySnapshot querySnapshot = query.get(); // Blocking call to get data
+            QuerySnapshot querySnapshot = query.get();
 
             List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
             for (QueryDocumentSnapshot document : documents) {
-                // Converts the Firestore document directly into your Book object
-                // Note: Ensure your Book class has a no-argument constructor
+                // convert firestore to book
                 Book book = document.toObject(Book.class);
                 bookList.add(book);
             }
