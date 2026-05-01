@@ -53,6 +53,7 @@ public class FirebaseContext {
             }
     
             Book book = document.toObject(Book.class);
+            assert book != null;
             book.setBookId(document.getId()); // firestore document id is the book id but doesnt actually set the bookId field, so must set manually
             return book;
         } catch (ExecutionException | InterruptedException e) {
@@ -67,6 +68,7 @@ public class FirebaseContext {
         }
 
         boolean addedBook = false;
+
 
         for (Book book : newBooks) {
             if (book == null || book.getBookId() == null || book.getBookId().isBlank()) {
