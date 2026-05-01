@@ -50,3 +50,5 @@ serviceAccountKey.json
 key.json
 .env
 .env.*
+
+**/firebase/key.json

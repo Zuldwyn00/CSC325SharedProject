@@ -123,7 +123,8 @@ public final class FakeData {
                 // Reason: alice has 3 active loans — exercises LIMIT_REACHED.
                 new User("user-001", "00012345", "alice@example.com", "1234"),
                 new User("user-002", "00067890", "bob@example.com",   "4321"),
-                new User("user-003", "00045678", "carol@example.com", "9999")
+                new User("user-003", "00045678", "carol@example.com", "9999"),
+                new User("user-004", "00098765", "joe@example.com",   "1234") //user sharing pin with another, shouldnt be an issue since pin is linked to ID but for testing incase.
         );
     }
 
@@ -139,31 +140,35 @@ public final class FakeData {
         return List.of(
                 // alice (user-001): 3 active loans → at the limit
                 // overdue → exercises NotificationService.sendOverdueAlerts.
-                new Loan("loan-001", "user-001", "book-001",
-                        LocalDate.of(2026, 3, 15), LocalDate.of(2026, 4, 15), false),
+                new Loan("loan-00001", "user-001", "book-001",
+                        LocalDate.of(2026, 3, 15), LocalDate.of(2026, 3, 29), false),
                 // due soon → exercises NotificationService.sendDueSoonAlerts.
-                new Loan("loan-002", "user-001", "book-005",
-                        LocalDate.of(2026, 4, 8),  LocalDate.of(2026, 4, 28), false),
-                new Loan("loan-003", "user-001", "book-011",
-                        LocalDate.of(2026, 4, 20), LocalDate.of(2026, 5, 10), false),
-                new Loan("loan-004", "user-001", "book-026",
+                new Loan("loan-00002", "user-001", "book-005",
+                        LocalDate.of(2026, 4, 8),  LocalDate.of(2026, 4, 22), false),
+                new Loan("loan-00003", "user-001", "book-011",
+                        LocalDate.of(2026, 4, 20), LocalDate.of(2026, 5, 4), false),
+                new Loan("loan-00004", "user-001", "book-026",
                         LocalDate.of(2026, 2, 10), LocalDate.of(2026, 2, 24), true),
 
                 // bob (user-002): 2 active loans, 1 returned
-                new Loan("loan-005", "user-002", "book-015",
-                        LocalDate.of(2026, 3, 20), LocalDate.of(2026, 4, 10), false),
-                new Loan("loan-006", "user-002", "book-035",
-                        LocalDate.of(2026, 4, 21), LocalDate.of(2026, 5, 8),  false),
-                new Loan("loan-007", "user-002", "book-020",
-                        LocalDate.of(2026, 1, 5),  LocalDate.of(2026, 1, 22), true),
+                new Loan("loan-00005", "user-002", "book-015",
+                        LocalDate.of(2026, 3, 20), LocalDate.of(2026, 4, 3), false),
+                new Loan("loan-00006", "user-002", "book-035",
+                        LocalDate.of(2026, 4, 21), LocalDate.of(2026, 5, 5),  false),
+                new Loan("loan-00007", "user-002", "book-020",
+                        LocalDate.of(2026, 1, 5),  LocalDate.of(2026, 1, 19), true),
 
                 // carol (user-003): 1 active loan, 2 returned
-                new Loan("loan-008", "user-003", "book-038",
+                new Loan("loan-00008", "user-003", "book-038",
                         LocalDate.of(2026, 3, 1),  LocalDate.of(2026, 3, 15), true),
-                new Loan("loan-009", "user-003", "book-031",
-                        LocalDate.of(2026, 2, 15), LocalDate.of(2026, 2, 28), true),
-                new Loan("loan-010", "user-003", "book-020",
-                        LocalDate.of(2026, 4, 15), LocalDate.of(2026, 4, 29), false)
+                new Loan("loan-00009", "user-003", "book-031",
+                        LocalDate.of(2026, 2, 15), LocalDate.of(2026, 3, 1), true), // 2026 is not a leap year
+                new Loan("loan-00010", "user-003", "book-024",
+                        LocalDate.of(2026, 4, 15), LocalDate.of(2026, 4, 29), false),
+
+            // Joe (user-004): 1 active loan, same book as loan-00010
+                new Loan("loan-00011", "user-004", "book-024",
+                         LocalDate.of(2026, 4, 13), LocalDate.of(2026, 4, 27), false)
         );
     }
 }
