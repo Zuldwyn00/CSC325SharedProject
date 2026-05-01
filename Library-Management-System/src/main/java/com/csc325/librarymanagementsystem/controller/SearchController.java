@@ -18,6 +18,7 @@ import java.util.List;
 
 public class SearchController {
 
+    @FXML
     public javafx.scene.control.TextField SearchTextField;
     @FXML
     private ChoiceBox<SearchType> SearchTypeChoice;
@@ -32,6 +33,9 @@ public class SearchController {
     private ListView<Book> resultsList;
 
     @FXML
+    private javafx.scene.control.TextField maxtext;
+
+    @FXML
     private void initialize() {
 
         SearchTypeChoice.getItems().addAll(SearchType.values());
@@ -41,6 +45,7 @@ public class SearchController {
         resultsList.setCellFactory(listView -> new ListCell<>() {
             private final ImageView imageView = new ImageView();
             private final Label textLabel = new Label();
+            private final Button checkoutButton = new Button("Check Out");
             private final HBox row = new HBox(15);
 
             {
@@ -50,7 +55,7 @@ public class SearchController {
 
                 textLabel.setWrapText(true);
 
-                row.getChildren().addAll(textLabel, imageView);
+                row.getChildren().addAll(textLabel, checkoutButton, imageView);
             }
 
             @Override
@@ -74,12 +79,26 @@ public class SearchController {
                                     "Quantity: " + book.getQuantity()
                     );
 
+                    if (book.getQuantity() > 0) {
+                        checkoutButton.setVisible(true);
+                        checkoutButton.setManaged(true);
+                        checkoutButton.setDisable(false);
+                    } else {
+                        checkoutButton.setVisible(false);
+                        checkoutButton.setManaged(false);
+                    }
+
+                    // click handler placeholder
+                    checkoutButton.setOnAction(e -> {
+                        System.out.println("Checkout clicked for: " + book.getTitle());
+                    });
+
                     setGraphic(row);
                 }
             }
         });
     }
-    public void displayResults(List<Book> results) {
+    public void displayResults(List<Book> results, int max) {
 
         resultsList.getItems().clear();
 
@@ -87,7 +106,11 @@ public class SearchController {
             return;
         }
 
-        resultsList.getItems().addAll(results);
+        int limit = Math.min(max, results.size());
+
+        for (int i = 0; i < limit; i++) {
+            resultsList.getItems().add(results.get(i));
+        }
     }
 
 
@@ -95,6 +118,7 @@ public class SearchController {
     private void searchButtonOnAction(javafx.event.ActionEvent  event) {
         SearchType type = SearchTypeChoice.getValue();
         String searchText = SearchTextField.getText();
+        int max = Integer.parseInt(maxtext.getText());
 
         SearchService searchService = new SearchService();
         FirebaseContext firebaseContext = new FirebaseContext();
@@ -103,7 +127,7 @@ public class SearchController {
 
         List<Book> results = searchService.search(searchText, type);
 
-        displayResults(results);
+        displayResults(results, max);
 
 
     }
