@@ -1,22 +1,20 @@
 package com.csc325.librarymanagementsystem.model;
 
-import java.time.LocalDate;
-
-
-/**
- * A Loan object represents a single instance of a checked-out book loan for a user.
- */
+import java.util.Date;
 
 public class Loan {
 
-    private final String loanId;
-    private final String userId;
-    private final String bookId;
-    private final LocalDate checkoutDate;
-    private final LocalDate dueDate;
+    private String loanId;
+    private String userId;
+    private String bookId;
+    private Date checkoutDate;
+    private Date dueDate;
     private boolean returned;
 
-    public Loan(String loanId, String bookId, String userId, LocalDate checkoutDate, LocalDate dueDate, boolean returned) {
+    public Loan() {
+    }
+
+    public Loan(String loanId, String bookId, String userId, Date checkoutDate, Date dueDate, boolean returned) {
         this.loanId = loanId;
         this.bookId = bookId;
         this.userId = userId;
@@ -29,20 +27,40 @@ public class Loan {
         return loanId;
     }
 
+    public void setLoanId(String loanId) {
+        this.loanId = loanId;
+    }
+
     public String getUserId() {
         return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getBookId() {
         return bookId;
     }
 
-    public LocalDate getCheckoutDate() {
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public Date getCheckoutDate() {
         return checkoutDate;
     }
 
-    public LocalDate getDueDate() {
+    public void setCheckoutDate(Date checkoutDate) {
+        this.checkoutDate = checkoutDate;
+    }
+
+    public Date getDueDate() {
         return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 
     public boolean isReturned() {
