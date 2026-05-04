@@ -1,9 +1,12 @@
 package com.csc325.librarymanagementsystem.data;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import com.csc325.librarymanagementsystem.model.Book;
+import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
 import com.csc325.librarymanagementsystem.model.Loan;
 import com.csc325.librarymanagementsystem.model.User;
 
@@ -134,41 +137,107 @@ public final class FakeData {
      *   Active normal (dueDate well in the future, not returned)
      *   Returned (already closed out)
      *
-     * @return immutable list of 10 fake loans
+     * @return immutable list of 11 fake loans
      */
     public static List<Loan> getLoans() {
         return List.of(
                 // alice (user-001): 3 active loans → at the limit
                 // overdue → exercises NotificationService.sendOverdueAlerts.
-                new Loan("loan-00001", "user-001", "book-001",
-                        LocalDate.of(2026, 3, 15), LocalDate.of(2026, 3, 29), false),
+                new Loan("loan-00001", "book-001", "user-001",
+                        date(2026, 3, 15), date(2026, 3, 29), false),
                 // due soon → exercises NotificationService.sendDueSoonAlerts.
-                new Loan("loan-00002", "user-001", "book-005",
-                        LocalDate.of(2026, 4, 8),  LocalDate.of(2026, 4, 22), false),
-                new Loan("loan-00003", "user-001", "book-011",
-                        LocalDate.of(2026, 4, 20), LocalDate.of(2026, 5, 4), false),
-                new Loan("loan-00004", "user-001", "book-026",
-                        LocalDate.of(2026, 2, 10), LocalDate.of(2026, 2, 24), true),
+                new Loan("loan-00002", "book-005", "user-001",
+                        date(2026, 3, 15), date(2026, 3, 29), false),
+                new Loan("loan-00003", "book-011", "user-001",
+                        date(2026, 4, 20), date(2026, 5, 4), false),
+                new Loan("loan-00004", "book-026", "user-001",
+                        date(2026, 2, 10), date(2026, 2, 24), true),
 
                 // bob (user-002): 2 active loans, 1 returned
-                new Loan("loan-00005", "user-002", "book-015",
-                        LocalDate.of(2026, 3, 20), LocalDate.of(2026, 4, 3), false),
-                new Loan("loan-00006", "user-002", "book-035",
-                        LocalDate.of(2026, 4, 21), LocalDate.of(2026, 5, 5),  false),
-                new Loan("loan-00007", "user-002", "book-020",
-                        LocalDate.of(2026, 1, 5),  LocalDate.of(2026, 1, 19), true),
+                new Loan("loan-00005", "book-015", "user-002",
+                        date(2026, 4, 28), date(2026, 5, 12), false),
+                new Loan("loan-00006", "book-035", "user-002",
+                        date(2026, 4, 28), date(2026, 5, 12), false),
+                new Loan("loan-00007", "book-020", "user-002",
+                        date(2026, 4, 28), date(2026, 5, 12), true),
 
                 // carol (user-003): 1 active loan, 2 returned
-                new Loan("loan-00008", "user-003", "book-038",
-                        LocalDate.of(2026, 3, 1),  LocalDate.of(2026, 3, 15), true),
-                new Loan("loan-00009", "user-003", "book-031",
-                        LocalDate.of(2026, 2, 15), LocalDate.of(2026, 3, 1), true), // 2026 is not a leap year
-                new Loan("loan-00010", "user-003", "book-024",
-                        LocalDate.of(2026, 4, 15), LocalDate.of(2026, 4, 29), false),
+                new Loan("loan-00008", "book-038", "user-003",
+                        date(2026, 3, 1), date(2026, 3, 15), true),
+                new Loan("loan-00009", "book-031", "user-003",
+                        date(2026, 2, 15), date(2026, 3, 1), true), // 2026 is not a leap year
+                new Loan("loan-00010", "book-024", "user-003",
+                        date(2026, 4, 15), date(2026, 4, 29), false),
 
-            // Joe (user-004): 1 active loan, same book as loan-00010
-                new Loan("loan-00011", "user-004", "book-024",
-                         LocalDate.of(2026, 4, 13), LocalDate.of(2026, 4, 27), false)
+                // Joe (user-004): 1 active loan, same book as loan-00010
+                new Loan("loan-00011", "book-024", "user-004",
+                         date(2026, 4, 13), date(2026, 4, 27), false)
+        );
+    }
+
+    /**
+     * Turns a plain calendar date (year, month, day) into a {java.util.Date}.
+     * We use midnight in the computer's local time zone so the sample data is easy to read,
+     * but still matches what {Loan} and {CheckoutConfirmation} store.
+     */
+    private static Date date(int year, int month, int day) {
+        return Date.from(LocalDate.of(year, month, day)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant());
+    }
+
+    /**
+     * Sample checkout confirmations tied to existing fake loans.
+     *
+     * @return immutable list of fake checkout confirmations
+     */
+    public static List<CheckoutConfirmation> getCheckoutConfirmations() {
+        return List.of(
+                // Confirmation for alice (user-001) checking out book-001 and book-005
+                // Reason: matches the checkoutDate of loan-00001 and loan-00002 (2026-03-15).
+                new CheckoutConfirmation(
+                        "conf-00001",
+                        "user-001",
+                        List.of("book-001", "book-005"),
+                        date(2026, 3, 15)),
+                // bob (user-002): book-015, book-035, book-020 — matches loan-00005 through loan-00007 (2026-04-28).
+                new CheckoutConfirmation(
+                        "conf-00002",
+                        "user-002",
+                        List.of("book-015", "book-035", "book-020"),
+                        date(2026, 4, 28)),
+
+                // Remaining confirmations each match one existing fake loan by user, book, and checkout date.
+                new CheckoutConfirmation(
+                        "conf-00003",
+                        "user-001",
+                        List.of("book-011"),
+                        date(2026, 4, 20)),
+                new CheckoutConfirmation(
+                        "conf-00004",
+                        "user-001",
+                        List.of("book-026"),
+                        date(2026, 2, 10)),
+                new CheckoutConfirmation(
+                        "conf-00005",
+                        "user-003",
+                        List.of("book-038"),
+                        date(2026, 3, 1)),
+                new CheckoutConfirmation(
+                        "conf-00006",
+                        "user-003",
+                        List.of("book-031"),
+                        date(2026, 2, 15)),
+                new CheckoutConfirmation(
+                        "conf-00007",
+                        "user-003",
+                        List.of("book-024"),
+                        date(2026, 4, 15)),
+                new CheckoutConfirmation(
+                        "conf-00008",
+                        "user-004",
+                        List.of("book-024"),
+                        date(2026, 4, 13))
         );
     }
 }
