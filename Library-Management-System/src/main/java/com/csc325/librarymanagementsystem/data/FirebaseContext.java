@@ -4,6 +4,7 @@ package com.csc325.librarymanagementsystem.data;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -21,9 +22,11 @@ public class FirebaseContext {
     private final String BOOKS_COLLECTION = "books";
     private final Firestore db; //static so that FirebaseContext always uses the same db rather than per-class instantiation
 
+    private final LoanContext loans;
+    private final CheckoutContext checkouts;
+
     // Fake data, remove later
     private final List<User> users = new ArrayList<>(FakeData.getUsers());
-    private final List<Loan> loans = new ArrayList<>(FakeData.getLoans());
 
     public List<Book> getAllBooks() {
         List<Book> bookList = new ArrayList<>();
@@ -93,7 +96,18 @@ public class FirebaseContext {
     }
 
     public boolean adjustStock(String bookId, int amount) {
-        return false;
+        // amount is the increment or decrement you are changing the quantity by
+        if (bookId == null || bookId.isBlank()) {return false;}
+
+        try {
+            db.collection(BOOKS_COLLECTION).document(bookId)
+              .update("quantity", FieldValue.increment(amount))
+              .get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error adjusting stock for " + bookId + ": " + e.getMessage());
+            return false;
+        }
     }
 
     public User findUserByIdentifier(String identifier) {
@@ -116,8 +130,14 @@ public class FirebaseContext {
         return null;
     }
 
+    public LoanContext loans() { return loans;}
+
+    public CheckoutContext checkouts() { return checkouts; }
+
     public FirebaseContext() {
         this.db = FirebaseInitializer.getFirestore();
+        this.loans = new LoanContext(db);
+        this.checkouts = new CheckoutContext(db);
     }
 
 

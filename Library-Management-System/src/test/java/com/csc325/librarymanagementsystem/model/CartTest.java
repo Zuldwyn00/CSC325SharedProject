@@ -22,24 +22,28 @@ class CartTest {
     }
 
     @Test
-    void removeBook_ExistingBookInCart_RemovesFromCart() {
+    void removeBook_ExistingBookInCart() {
         List<Book> books = FakeData.getBooks();
+        // define the data that is expected for the assert functions later
         Book bookToRemove = books.get(0);
         Book bookToKeep = books.get(1);
 
+
+        //testing the actual methods
         Cart cart = new Cart();
         cart.addBook(bookToRemove);
         cart.addBook(bookToKeep);
 
         cart.removeBook(bookToRemove.getBookId());
 
-        assertEquals(1, cart.size());
+        // ensuring the pre-defined expected data above asserts to be the same as we expect, thus a successful test.
+        assertEquals(1, cart.size()); // 1 is the expected outcome here, while cart.size is the actual current outcome. Ideally these should be the same and come back as a pass
         assertTrue(cart.getBooks().contains(bookToKeep));
         assertFalse(cart.getBooks().contains(bookToRemove));
     }
 
     @Test
-    void removeBook_NotExistingBookInCart_RemovesFromCart() {
+    void removeBook_NotExistingBookInCart() {
         List<Book> books = FakeData.getBooks();
 
         Cart cart = new Cart();
