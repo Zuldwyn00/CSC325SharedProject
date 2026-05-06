@@ -53,9 +53,19 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
+
             Stage stage = (Stage) source.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene currentScene = source.getScene();
+
+            Scene newScene = new Scene(
+                    root,
+                    currentScene.getWidth(),
+                    currentScene.getHeight()
+            );
+
+            stage.setScene(newScene);
             stage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
