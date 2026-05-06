@@ -3,48 +3,40 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.SearchController">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.SearchController">
 
     <children>
         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
             <top>
-                <HBox alignment="CENTER_LEFT" prefHeight="55.0" style="-fx-background-color: #223355;">
+                <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="600.0" styleClass="top-bar" BorderPane.alignment="CENTER">
                     <children>
                         <Region prefWidth="10.0" />
-                        <Label text="Library" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="15.0" />
-                            </font>
-                        </Label>
+
+                        <Label styleClass="app-title" text="Library" />
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <Label text="Search Books" textFill="#CBD5E1">
-                            <font>
-                                <Font size="13.0" />
-                            </font>
-                        </Label>
+                        <Label styleClass="top-subtitle" text="Search Books" />
 
                         <Region prefWidth="16.0" />
+
+                        <Button fx:id="notificationButton" mnemonicParsing="false" prefHeight="55.0" prefWidth="86.0" styleClass="top-button" text="Notifications" />
+
+                        <Region prefWidth="8.0" />
                     </children>
                 </HBox>
             </top>
 
             <left>
-                <VBox prefWidth="156.0" style="-fx-background-color: #2a2a2a;">
+                <VBox prefHeight="345.0" prefWidth="156.0" styleClass="side-bar" BorderPane.alignment="CENTER">
                     <padding>
                         <Insets left="10.0" top="10.0" />
                     </padding>
 
                     <children>
-                        <Label text="MENU" textFill="#a8a8a8">
-                            <font>
-                                <Font name="System Bold" size="11.0" />
-                            </font>
-                        </Label>
+                        <Label styleClass="menu-label" text="MENU" />
 
                         <Separator prefWidth="164.0">
                             <VBox.margin>
@@ -52,63 +44,62 @@
                             </VBox.margin>
                         </Separator>
 
-                        <Button fx:id="backToScreenButton" mnemonicParsing="false" onAction="#onBackToScreen" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: TRANSPARENT; -fx-alignment: CENTER-LEFT;" text="Back" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
+                        <Button fx:id="homeButton" mnemonicParsing="false" onAction="#onHomeClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Home" />
 
-                        <Button prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: #3d3d3d; -fx-alignment: CENTER-LEFT;" text="Search Books" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
+                        <Button fx:id="searchMenuButton" mnemonicParsing="false" onAction="#searchButtonOnAction" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button-active" text="Search Books" />
+
+                        <Button fx:id="cartButton" mnemonicParsing="false" onAction="#onCartClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="My Cart" />
+
+                        <Button fx:id="loansButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Active Loans" />
+
+                        <Button fx:id="checkoutNavButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Checkout" />
 
                         <Region VBox.vgrow="ALWAYS" />
+
+                        <Separator prefWidth="164.0">
+                            <VBox.margin>
+                                <Insets bottom="4.0" />
+                            </VBox.margin>
+                        </Separator>
+
+                        <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Profile" />
+
+                        <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Settings" />
+
+                        <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#onSignOutClicked" prefHeight="34.0" prefWidth="143.0" styleClass="sign-out-button" text="Sign Out" />
                     </children>
                 </VBox>
             </left>
 
             <center>
-                <VBox spacing="16.0" style="-fx-background-color: #333333;">
+                <VBox prefHeight="345.0" prefWidth="444.0" spacing="16.0" styleClass="content-pane" BorderPane.alignment="CENTER">
                     <padding>
                         <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
                     </padding>
 
                     <children>
-                        <Label text="Search Books" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="22.0" />
-                            </font>
-                        </Label>
+                        <Label styleClass="page-title" text="Search Books" />
 
-                        <Label text="Find books by title, author, genre, or ISBN." textFill="#a8a8a8">
-                            <font>
-                                <Font size="13.0" />
-                            </font>
-                        </Label>
+                        <Label styleClass="page-subtitle" text="Find books by title, author, genre, or ISBN." />
 
                         <Separator />
 
-                        <HBox spacing="10.0" style="-fx-border-color: #555555; -fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: #3d3d3d; -fx-padding: 14;">
-
+                        <HBox spacing="10.0" styleClass="search-card">
                             <children>
-                                <TextField fx:id="SearchTextField" prefHeight="25.0" prefWidth="103.0" promptText="Search..." HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="SearchTextField" promptText="Search..." HBox.hgrow="ALWAYS" />
 
-                                <TextField fx:id="maxtext" prefHeight="25.0" prefWidth="26.0" promptText="Max" text="5" />
+                                <TextField fx:id="maxtext" prefHeight="25.0" prefWidth="23.0" promptText="Max" text="5" />
 
-                                <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonOnAction" text="Search" />
+                                <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonOnAction" styleClass="primary-button" text="Search" />
 
-                                <ChoiceBox fx:id="SearchTypeChoice" prefWidth="150.0" />
+                                <ChoiceBox fx:id="SearchTypeChoice" prefHeight="25.0" prefWidth="102.0" />
                             </children>
                         </HBox>
 
-                        <ListView fx:id="resultsList" style="-fx-background-color: #3d3d3d; -fx-control-inner-background: #3d3d3d; -fx-border-color: #555555; -fx-border-radius: 8; -fx-background-radius: 8;" VBox.vgrow="ALWAYS" />
-
+                        <ListView fx:id="resultsList" styleClass="dark-list" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
             </center>
-
         </BorderPane>
     </children>
 </AnchorPane>
