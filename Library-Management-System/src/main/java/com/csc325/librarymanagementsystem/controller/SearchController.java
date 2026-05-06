@@ -67,9 +67,7 @@ public class SearchController {
                     return;
                 }
 
-                Image image = new Image(
-                        getClass().getResource("/com/csc325/librarymanagementsystem/images/Minecraft.png").toExternalForm()
-                );
+                Image image = new Image(book.getCoverImageUrl());
 
                 imageView.setImage(image);
 
