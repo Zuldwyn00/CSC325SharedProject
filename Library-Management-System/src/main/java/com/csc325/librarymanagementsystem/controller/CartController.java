@@ -13,6 +13,9 @@ public class CartController {
 
     @FXML
     private Button homeButton;
+    private Button searchButton;
+
+
 
     @FXML
     private void onHomeClicked(){

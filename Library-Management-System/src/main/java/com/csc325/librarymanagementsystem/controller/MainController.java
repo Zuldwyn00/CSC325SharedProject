@@ -39,7 +39,9 @@ public class MainController {
         navigateTo("/com/csc325/librarymanagementsystem/CartScreen.fxml", cartButton);
 
     }
-    @FXML private void onLoansClicked()    { System.out.println("Loans clicked"); }
+    @FXML private void onLoansClicked()    {
+        navigateTo("/com/csc325/librarymanagementsystem/LoanScreen.fxml", loansButton);
+    }
     @FXML private void onCheckoutClicked() { System.out.println("Checkout clicked"); }
     @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
     @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
