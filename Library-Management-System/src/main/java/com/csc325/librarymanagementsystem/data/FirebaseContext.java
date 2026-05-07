@@ -110,6 +110,29 @@ public class FirebaseContext {
         }
     }
 
+    public boolean processReturn(String loanId) {
+        if (loanId == null || loanId.isBlank()) {return false;}
+
+        Loan loan = loans.getLoanByLoanId(loanId);
+        if (loan == null) {
+            System.err.println("Error returning loan: " + loanId + " - Loan not found");
+            return false;
+        }
+        if (loan.isReturned()) {
+            System.err.println("Error returning loan: " + loanId + " - Cannot return already returned loan");
+            return false;
+        }
+
+        Book book = getBookById(loan.getBookId());
+        if (book == null) {
+            System.err.println("Error returning loan: " + loanId + " - Book " + loan.getBookId() + " not found");
+            return false;
+        }
+
+        if (!loans.markLoanReturned(loanId)) {return false;} // return false if loan fails to get marked as returned
+        return adjustStock(loan.getBookId(), 1); // adjust stock of book +1
+    }
+
     public User findUserByIdentifier(String identifier) {
         if (identifier == null) {return null;}
 
