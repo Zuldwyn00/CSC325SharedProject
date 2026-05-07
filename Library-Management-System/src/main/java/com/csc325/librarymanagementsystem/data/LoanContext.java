@@ -67,6 +67,27 @@ public class LoanContext {
         return activeLoans;
     }
 
+    public List<Loan> getLoansByUserId(String userId) {
+        // returns all loans for a specific user, including returned loans
+        if (userId == null || userId.isBlank()) {return List.of();}
+
+        List<Loan> userLoans = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> query = firestore.collection(LOANS_COLLECTION)
+                    .whereEqualTo("userId", userId)
+                    .get();
+
+            for (QueryDocumentSnapshot document : query.get().getDocuments()) {
+                Loan loan = document.toObject(Loan.class);
+                loan.setLoanId(document.getId());
+                userLoans.add(loan);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println("Error retrieving loans for " + userId + ": " + e.getMessage());
+        }
+        return userLoans;
+    }
+
     public boolean markLoanReturned(String loanId) {
         if (loanId == null || loanId.isBlank()) {return false;}
 
@@ -190,7 +211,7 @@ public class LoanContext {
         return overdue;
     }
 
-    public Loan getLoanById(String loanId) {
+    public Loan getLoanByLoanId(String loanId) {
         if (loanId == null || loanId.isBlank()) {return null;}
 
         try {

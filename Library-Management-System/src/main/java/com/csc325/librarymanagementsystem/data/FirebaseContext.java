@@ -110,23 +110,10 @@ public class FirebaseContext {
         }
     }
 
-    /**
-     * Processes a return for the given loan. Marks the loan as returned and
-     * increments the book's stock by 1. Returns false on any validation failure
-     * or Firestore error.
-     *
-     * Lives on FirebaseContext because this is the data-layer facade that
-     * already aggregates loans, checkouts, and book operations. Keeping the
-     * orchestration here means CheckoutContext and LoanContext stay focused
-     * on their own collections.
-     *
-     * Note: writes are sequential, not transactional. If the loan update
-     * succeeds but the stock increment fails, Firebase will be left inconsistent.
-     */
     public boolean processReturn(String loanId) {
         if (loanId == null || loanId.isBlank()) {return false;}
 
-        Loan loan = loans.getLoanById(loanId);
+        Loan loan = loans.getLoanByLoanId(loanId);
         if (loan == null) {
             System.err.println("Error returning loan: " + loanId + " - Loan not found");
             return false;
