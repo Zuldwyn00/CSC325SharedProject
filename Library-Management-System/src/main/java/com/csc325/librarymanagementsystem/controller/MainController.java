@@ -34,7 +34,11 @@ public class MainController {
         navigateTo("/com/csc325/librarymanagementsystem/SearchScreen.fxml", searchButton);
     }
 
-    @FXML private void onCartClicked()     { System.out.println("Cart clicked"); }
+    @FXML
+    private void onCartClicked(){
+        navigateTo("/com/csc325/librarymanagementsystem/CartScreen.fxml", cartButton);
+
+    }
     @FXML private void onLoansClicked()    { System.out.println("Loans clicked"); }
     @FXML private void onCheckoutClicked() { System.out.println("Checkout clicked"); }
     @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
@@ -49,9 +53,19 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
+
             Stage stage = (Stage) source.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene currentScene = source.getScene();
+
+            Scene newScene = new Scene(
+                    root,
+                    currentScene.getWidth(),
+                    currentScene.getHeight()
+            );
+
+            stage.setScene(newScene);
             stage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

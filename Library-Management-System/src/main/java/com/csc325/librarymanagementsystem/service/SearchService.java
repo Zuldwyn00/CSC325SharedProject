@@ -34,6 +34,7 @@ public class SearchService {
             switch (type) {
 
                 case TITLE: {
+                    //i am aware this isnt the most efficient way to split the title but for a small database like this it shouldnt effect speed to much
                     String[] queryWords = query.split("\\s+");
                     String[] titleWords = book.getTitle().toLowerCase().split("\\s+");
 

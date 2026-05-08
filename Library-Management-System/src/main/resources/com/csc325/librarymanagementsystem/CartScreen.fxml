@@ -2,9 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane minHeight="400.0"
             minWidth="600.0"
@@ -14,7 +12,7 @@
             styleClass="root-pane"
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.csc325.librarymanagementsystem.controller.MainController">
+            fx:controller="com.csc325.librarymanagementsystem.controller.CartController">
 
     <children>
 
@@ -30,14 +28,16 @@
                       styleClass="top-bar">
 
                     <children>
+
                         <Region prefWidth="10.0" />
 
-                        <Label text="Library" styleClass="app-title" />
+                        <Label text="Library"
+                               styleClass="app-title" />
 
                         <Region HBox.hgrow="ALWAYS" />
 
                         <Label fx:id="welcomeLabel"
-                               text="Welcome, John!"
+                               text="Welcome"
                                styleClass="top-subtitle" />
 
                         <Region prefWidth="16.0" />
@@ -45,11 +45,12 @@
                         <Button fx:id="notificationButton"
                                 text="Notifications"
                                 mnemonicParsing="false"
-                                styleClass="top-button"
                                 prefHeight="55.0"
-                                prefWidth="86.0" />
+                                prefWidth="86.0"
+                                styleClass="top-button" />
 
                         <Region prefWidth="8.0" />
+
                     </children>
                 </HBox>
             </top>
@@ -65,7 +66,8 @@
 
                     <children>
 
-                        <Label text="MENU" styleClass="menu-label" />
+                        <Label text="MENU"
+                               styleClass="menu-label" />
 
                         <Separator prefWidth="164.0">
                             <VBox.margin>
@@ -76,14 +78,15 @@
                         <Button fx:id="homeButton"
                                 text="Home"
                                 mnemonicParsing="false"
+                                onAction="#onHomeClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
-                                styleClass="menu-button-active" />
+                                styleClass="menu-button" />
 
                         <Button fx:id="searchButton"
                                 text="Search Books"
                                 mnemonicParsing="false"
-                                onAction="#searchButtonOnAction"
+                                onAction="#onSearchClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
                                 styleClass="menu-button" />
@@ -91,23 +94,20 @@
                         <Button fx:id="cartButton"
                                 text="My Cart"
                                 mnemonicParsing="false"
-                                onAction="#onCartClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
-                                styleClass="menu-button" />
+                                styleClass="menu-button-active" />
 
                         <Button fx:id="loansButton"
                                 text="Active Loans"
                                 mnemonicParsing="false"
-                                onAction="#onLoansClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
                                 styleClass="menu-button" />
 
-                        <Button fx:id="checkoutButton"
+                        <Button fx:id="checkOutButton"
                                 text="Checkout"
                                 mnemonicParsing="false"
-                                onAction="#onCheckoutClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
                                 styleClass="menu-button" />
@@ -123,7 +123,6 @@
                         <Button fx:id="profileButton"
                                 text="Profile"
                                 mnemonicParsing="false"
-                                onAction="#onProfileClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
                                 styleClass="menu-button" />
@@ -131,7 +130,6 @@
                         <Button fx:id="settingsButton"
                                 text="Settings"
                                 mnemonicParsing="false"
-                                onAction="#onSettingsClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
                                 styleClass="menu-button" />
@@ -139,10 +137,10 @@
                         <Button fx:id="signOutButton"
                                 text="Sign Out"
                                 mnemonicParsing="false"
-                                onAction="#onSignOutClicked"
                                 prefHeight="34.0"
                                 prefWidth="143.0"
-                                styleClass="sign-out-button" />
+                                styleClass="sign-out-button"
+                                onAction="#onSignOutClicked"/>
 
                     </children>
                 </VBox>
@@ -163,112 +161,50 @@
 
                     <children>
 
-                        <Label text="Welcome to the Library!"
+                        <Label text="My Cart"
                                styleClass="page-title" />
 
-                        <Label text="What would you like to do today?"
+                        <Label text="Review your selected books before checkout."
                                styleClass="page-subtitle" />
 
                         <Separator />
 
-                        <HBox spacing="16.0">
+                        <VBox spacing="12.0"
+                              VBox.vgrow="ALWAYS"
+                              styleClass="search-card">
 
                             <children>
 
-                                <VBox prefWidth="185.0"
-                                      spacing="10.0"
-                                      styleClass="search-card">
+                                <ListView fx:id="cartListView"
+                                          VBox.vgrow="ALWAYS"
+                                          styleClass="dark-list" />
+
+                                <Separator />
+
+                                <HBox alignment="CENTER_LEFT"
+                                      spacing="10.0">
 
                                     <children>
 
-                                        <Label text="MOST LOANED BOOK"
+                                        <Label fx:id="itemCounterLabel"
+                                               text="Items"
                                                styleClass="menu-label" />
 
-                                        <HBox alignment="CENTER_LEFT"
-                                              spacing="12.0">
+                                        <Region HBox.hgrow="ALWAYS" />
 
-                                            <children>
+                                        <Button text="Clear Cart"
+                                                mnemonicParsing="false"
+                                                styleClass="menu-button-active" />
 
-                                                <ImageView fx:id="mostLoanedImage"
-                                                           fitHeight="110.0"
-                                                           fitWidth="80.0"
-                                                           preserveRatio="true" />
-
-                                                <VBox alignment="CENTER_LEFT"
-                                                      spacing="6.0">
-
-                                                    <children>
-
-                                                        <Label fx:id="mostLoanedTitle"
-                                                               text="Book Title"
-                                                               wrapText="true"
-                                                               styleClass="card-title" />
-
-                                                        <Label fx:id="mostLoanedAuthor"
-                                                               text="Author Name"
-                                                               styleClass="page-subtitle" />
-
-                                                        <Label fx:id="mostLoanedCount"
-                                                               text="0 active loans"
-                                                               styleClass="small-muted" />
-
-                                                    </children>
-                                                </VBox>
-
-                                            </children>
-                                        </HBox>
+                                        <Button text="Checkout"
+                                                mnemonicParsing="false"
+                                                styleClass="primary-button" />
 
                                     </children>
-                                </VBox>
-
-                                <VBox prefWidth="185.0"
-                                      spacing="10.0"
-                                      styleClass="search-card">
-
-                                    <children>
-
-                                        <Label text="BOOK OF THE DAY"
-                                               styleClass="menu-label" />
-
-                                        <HBox alignment="CENTER_LEFT"
-                                              spacing="12.0">
-
-                                            <children>
-
-                                                <ImageView fx:id="bookOfDayImage"
-                                                           fitHeight="110.0"
-                                                           fitWidth="80.0"
-                                                           preserveRatio="true" />
-
-                                                <VBox alignment="CENTER_LEFT"
-                                                      spacing="6.0">
-
-                                                    <children>
-
-                                                        <Label fx:id="bookOfDayTitle"
-                                                               text="Book Title"
-                                                               wrapText="true"
-                                                               styleClass="card-title" />
-
-                                                        <Label fx:id="bookOfDayAuthor"
-                                                               text="Author Name"
-                                                               styleClass="page-subtitle" />
-
-                                                        <Label fx:id="bookOfDayGenre"
-                                                               text="Random pick of the day"
-                                                               styleClass="small-muted" />
-
-                                                    </children>
-                                                </VBox>
-
-                                            </children>
-                                        </HBox>
-
-                                    </children>
-                                </VBox>
+                                </HBox>
 
                             </children>
-                        </HBox>
+                        </VBox>
 
                     </children>
                 </VBox>
