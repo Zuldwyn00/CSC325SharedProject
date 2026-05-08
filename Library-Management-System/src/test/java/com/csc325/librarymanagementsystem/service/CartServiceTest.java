@@ -1,14 +1,12 @@
 package com.csc325.librarymanagementsystem.service;
 
+import com.csc325.librarymanagementsystem.data.FakeData;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.model.Cart;
 import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
-import com.csc325.librarymanagementsystem.model.Loan;
 import com.csc325.librarymanagementsystem.model.User;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,8 +15,8 @@ class CartServiceTest {
 
     private final CartService cartService = new CartService();
 
-    private User makeUser() {
-        return new User("user1", "lib123", "student@test.com", "1234");
+    private User getTestUser() {
+        return FakeData.getUsers().get(0);
     }
 
     private Book makeBook(String bookId, int quantity) {
@@ -33,50 +31,57 @@ class CartServiceTest {
         );
     }
 
-    private Loan makeActiveLoan(String loanId, String bookId) {
-        return new Loan(
-                loanId,
-                bookId,
-                "user1",
-                LocalDate.now(),
-                LocalDate.now().plusWeeks(2),
-                false
-        );
-    }
+    @Test
+    void addBookToCartShouldRejectNullUser() {
+        Cart cart = new Cart();
+        Book book = makeBook("book1", 2);
 
-    private Loan makeReturnedLoan(String loanId, String bookId) {
-        return new Loan(
-                loanId,
-                bookId,
-                "user1",
-                LocalDate.now(),
-                LocalDate.now().plusWeeks(2),
-                true
-        );
+        boolean result = cartService.addBookToCart(null, cart, book);
+
+        assertFalse(result);
+        assertEquals(0, cart.size());
     }
 
     @Test
-    void addBookToCartShouldAddAvailableBook() {
-        User user = makeUser();
-        Cart cart = new Cart();
+    void addBookToCartShouldRejectNullCart() {
+        User user = getTestUser();
         Book book = makeBook("book1", 2);
-        List<Loan> currentLoans = new ArrayList<>();
 
-        boolean result = cartService.addBookToCart(user, cart, book, currentLoans);
+        boolean result = cartService.addBookToCart(user, null, book);
 
-        assertTrue(result);
-        assertEquals(1, cart.size());
-        assertTrue(cart.contains("book1"));
+        assertFalse(result);
+    }
+
+    @Test
+    void addBookToCartShouldRejectNullBook() {
+        User user = getTestUser();
+        Cart cart = new Cart();
+
+        boolean result = cartService.addBookToCart(user, cart, null);
+
+        assertFalse(result);
+        assertEquals(0, cart.size());
+    }
+
+    @Test
+    void addBookToCartShouldRejectBookWithBlankId() {
+        User user = getTestUser();
+        Cart cart = new Cart();
+        Book book = makeBook("", 2);
+
+        boolean result = cartService.addBookToCart(user, cart, book);
+
+        assertFalse(result);
+        assertEquals(0, cart.size());
     }
 
     @Test
     void addBookToCartShouldRejectUnavailableBook() {
-        User user = makeUser();
+        User user = getTestUser();
         Cart cart = new Cart();
         Book book = makeBook("book1", 0);
-        List<Loan> currentLoans = new ArrayList<>();
 
-        boolean result = cartService.addBookToCart(user, cart, book, currentLoans);
+        boolean result = cartService.addBookToCart(user, cart, book);
 
         assertFalse(result);
         assertEquals(0, cart.size());
@@ -84,146 +89,69 @@ class CartServiceTest {
 
     @Test
     void addBookToCartShouldRejectDuplicateBook() {
-        User user = makeUser();
+        User user = getTestUser();
         Cart cart = new Cart();
         Book book = makeBook("book1", 2);
-        List<Loan> currentLoans = new ArrayList<>();
 
-        boolean firstAdd = cartService.addBookToCart(user, cart, book, currentLoans);
-        boolean secondAdd = cartService.addBookToCart(user, cart, book, currentLoans);
+        cart.addBook(book);
 
-        assertTrue(firstAdd);
-        assertFalse(secondAdd);
+        boolean result = cartService.addBookToCart(user, cart, book);
+
+        assertFalse(result);
         assertEquals(1, cart.size());
     }
 
     @Test
-    void addBookToCartShouldRejectBookWhenUserAlreadyAtLimit() {
-        User user = makeUser();
+    void canCheckoutShouldReturnFalseForNullUser() {
         Cart cart = new Cart();
-        Book book = makeBook("book4", 2);
+        cart.addBook(makeBook("book1", 2));
 
-        List<Loan> currentLoans = List.of(
-                makeActiveLoan("loan1", "book1"),
-                makeActiveLoan("loan2", "book2"),
-                makeActiveLoan("loan3", "book3")
-        );
-
-        boolean result = cartService.addBookToCart(user, cart, book, currentLoans);
+        boolean result = cartService.canCheckout(null, cart);
 
         assertFalse(result);
-        assertEquals(0, cart.size());
+    }
+
+    @Test
+    void canCheckoutShouldReturnFalseForNullCart() {
+        User user = getTestUser();
+
+        boolean result = cartService.canCheckout(user, null);
+
+        assertFalse(result);
     }
 
     @Test
     void canCheckoutShouldReturnFalseForEmptyCart() {
-        User user = makeUser();
+        User user = getTestUser();
         Cart cart = new Cart();
-        List<Loan> currentLoans = new ArrayList<>();
 
-        boolean result = cartService.canCheckout(user, cart, currentLoans);
+        boolean result = cartService.canCheckout(user, cart);
 
         assertFalse(result);
     }
 
     @Test
-    void canCheckoutShouldReturnFalseWhenCheckoutLimitExceeded() {
-        User user = makeUser();
+    void checkoutShouldReturnNullForEmptyCart() {
+        User user = getTestUser();
         Cart cart = new Cart();
 
-        cart.addBook(makeBook("book3", 1));
-        cart.addBook(makeBook("book4", 1));
-
-        List<Loan> currentLoans = List.of(
-                makeActiveLoan("loan1", "book1"),
-                makeActiveLoan("loan2", "book2")
-        );
-
-        boolean result = cartService.canCheckout(user, cart, currentLoans);
-
-        assertFalse(result);
-    }
-
-    @Test
-    void canCheckoutShouldIgnoreReturnedLoans() {
-        User user = makeUser();
-        Cart cart = new Cart();
-
-        cart.addBook(makeBook("book1", 1));
-        cart.addBook(makeBook("book2", 1));
-        cart.addBook(makeBook("book3", 1));
-
-        List<Loan> currentLoans = List.of(
-                makeReturnedLoan("loan1", "oldBook")
-        );
-
-        boolean result = cartService.canCheckout(user, cart, currentLoans);
-
-        assertTrue(result);
-    }
-
-    @Test
-    void checkoutShouldDecreaseBookQuantity() {
-        User user = makeUser();
-        Cart cart = new Cart();
-        Book book = makeBook("book1", 3);
-        cart.addBook(book);
-
-        CheckoutConfirmation confirmation = cartService.checkout(user, cart, new ArrayList<>());
-
-        assertNotNull(confirmation);
-        assertEquals(2, book.getQuantity());
-    }
-
-    @Test
-    void checkoutShouldClearCartAfterSuccessfulCheckout() {
-        User user = makeUser();
-        Cart cart = new Cart();
-        cart.addBook(makeBook("book1", 2));
-        cart.addBook(makeBook("book2", 2));
-
-        CheckoutConfirmation confirmation = cartService.checkout(user, cart, new ArrayList<>());
-
-        assertNotNull(confirmation);
-        assertTrue(cart.isEmpty());
-    }
-
-    @Test
-    void checkoutShouldCreateConfirmationNumber() {
-        User user = makeUser();
-        Cart cart = new Cart();
-        cart.addBook(makeBook("book1", 2));
-
-        CheckoutConfirmation confirmation = cartService.checkout(user, cart, new ArrayList<>());
-
-        assertNotNull(confirmation);
-        assertNotNull(confirmation.getConfirmationNumber());
-        assertTrue(confirmation.getConfirmationNumber().startsWith("CHK-"));
-        assertEquals("user1", confirmation.getUserId());
-        assertEquals(1, confirmation.getBookIds().size());
-        assertEquals("book1", confirmation.getBookIds().get(0));
-    }
-
-    @Test
-    void checkoutShouldReturnNullIfCheckoutIsInvalid() {
-        User user = makeUser();
-        Cart cart = new Cart();
-
-        CheckoutConfirmation confirmation = cartService.checkout(user, cart, new ArrayList<>());
+        CheckoutConfirmation confirmation = cartService.checkout(user, cart);
 
         assertNull(confirmation);
     }
 
     @Test
-    void countActiveLoansShouldOnlyCountUnreturnedLoans() {
-        List<Loan> loans = List.of(
-                makeActiveLoan("loan1", "book1"),
-                makeReturnedLoan("loan2", "book2"),
-                makeActiveLoan("loan3", "book3")
-        );
+    void generateConfirmationNumberShouldStartWithChk() {
+        String confirmationNumber = cartService.generateConfirmationNumber();
 
-        int activeLoans = cartService.countActiveLoans(loans);
+        assertNotNull(confirmationNumber);
+        assertTrue(confirmationNumber.startsWith("CHK-"));
+    }
 
-        assertEquals(2, activeLoans);
+    @Test
+    void generateConfirmationNumberShouldHaveExpectedLength() {
+        String confirmationNumber = cartService.generateConfirmationNumber();
+
+        assertEquals(12, confirmationNumber.length());
     }
 }

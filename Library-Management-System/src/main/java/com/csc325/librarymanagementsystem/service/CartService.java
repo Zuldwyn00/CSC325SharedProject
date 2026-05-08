@@ -1,47 +1,54 @@
 package com.csc325.librarymanagementsystem.service;
 
+import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.model.Cart;
 import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
 import com.csc325.librarymanagementsystem.model.Loan;
 import com.csc325.librarymanagementsystem.model.User;
 
-import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-// Handles cart and checkout rules for the library system.
-// Add books to a cart
-// Prevent users from checking out more than 3 books total
-// Prevent checkout if a book is unavailable
-// Create checkout confirmations
-
 public class CartService {
 
     private static final int MAX_CHECKOUT_LIMIT = 3;
+    private static final int LOAN_PERIOD_DAYS = 14;
 
-        // Adds a book to the cart if it is valid, available, not already in cart,
-        // and the user will not go over the 3-book checkout limit.
+    private final FirebaseContext firebaseContext;
 
-    public boolean addBookToCart(User user, Cart cart, Book book, List<Loan> currentLoans) {
+    public CartService() {
+        this(new FirebaseContext());
+    }
+
+    public CartService(FirebaseContext firebaseContext) {
+        this.firebaseContext = firebaseContext;
+    }
+
+    public boolean addBookToCart(User user, Cart cart, Book book) {
         if (user == null || cart == null || book == null) {
             return false;
         }
 
-        // Book must have at least 1 available copy
+        if (book.getBookId() == null || book.getBookId().isBlank()) {
+            return false;
+        }
+
         if (book.getQuantity() <= 0) {
             return false;
         }
 
-        // Prevent duplicate books in the same cart
         if (cart.contains(book.getBookId())) {
             return false;
         }
 
-        int activeLoanCount = countActiveLoans(currentLoans);
+        int activeLoanCount = firebaseContext.loans()
+                .getActiveLoans(user.getUserId())
+                .size();
 
-        // User cannot have more than 3 books total between loans + cart
         if (activeLoanCount + cart.size() >= MAX_CHECKOUT_LIMIT) {
             return false;
         }
@@ -49,22 +56,25 @@ public class CartService {
         return cart.addBook(book);
     }
 
-
-    public boolean canCheckout(User user, Cart cart, List<Loan> currentLoans) {
+    public boolean canCheckout(User user, Cart cart) {
         if (user == null || cart == null || cart.isEmpty()) {
             return false;
         }
 
-        int activeLoanCount = countActiveLoans(currentLoans);
+        int activeLoanCount = firebaseContext.loans()
+                .getActiveLoans(user.getUserId())
+                .size();
 
-        // Current checked out books + cart books cannot be more than 3
         if (activeLoanCount + cart.size() > MAX_CHECKOUT_LIMIT) {
             return false;
         }
 
-        // Every book in the cart must be available
         for (Book book : cart.getBooks()) {
-            if (book == null || book.getQuantity() <= 0) {
+            if (book == null || book.getBookId() == null || book.getBookId().isBlank()) {
+                return false;
+            }
+
+            if (book.getQuantity() <= 0) {
                 return false;
             }
         }
@@ -72,61 +82,64 @@ public class CartService {
         return true;
     }
 
-//     Completes checkout and returns a confirmation.
-//     This currently updates the local Book quantity.
-//     Later, this can be connected to Firebase to save loans/confirmations.
-
-    public CheckoutConfirmation checkout(User user, Cart cart, List<Loan> currentLoans) {
-        if (!canCheckout(user, cart, currentLoans)) {
+    public CheckoutConfirmation checkout(User user, Cart cart) {
+        if (!canCheckout(user, cart)) {
             return null;
         }
 
-        // Decrease inventory for each checked out book
-        for (Book book : cart.getBooks()) {
-            book.setQuantity(book.getQuantity() - 1);
-        }
-
-        // Get all checked out book IDs
         List<String> bookIds = cart.getBooks()
                 .stream()
                 .map(Book::getBookId)
                 .collect(Collectors.toList());
 
-        // Create confirmation number
-        String confirmationNumber = generateConfirmationNumber();
+        Date checkoutDate = new Date();
 
         CheckoutConfirmation confirmation = new CheckoutConfirmation(
-                confirmationNumber,
+                generateConfirmationNumber(),
                 user.getUserId(),
                 bookIds,
-                LocalDateTime.now()
+                checkoutDate
         );
 
-        // Empty cart after successful checkout
+        for (Book book : cart.getBooks()) {
+            boolean stockUpdated = firebaseContext.adjustStock(book.getBookId(), -1);
+
+            if (!stockUpdated) {
+                return null;
+            }
+
+            Calendar dueDateCalendar = Calendar.getInstance();
+            dueDateCalendar.setTime(checkoutDate);
+            dueDateCalendar.add(Calendar.DAY_OF_YEAR, LOAN_PERIOD_DAYS);
+            Date dueDate = dueDateCalendar.getTime();
+
+            Loan loan = new Loan(
+                    UUID.randomUUID().toString(),
+                    book.getBookId(),
+                    user.getUserId(),
+                    checkoutDate,
+                    dueDate,
+                    false
+            );
+
+            boolean loanRecorded = firebaseContext.loans().recordLoan(loan);
+
+            if (!loanRecorded) {
+                return null;
+            }
+        }
+
+        boolean confirmationRecorded = firebaseContext.checkouts()
+                .recordCheckoutConfirmation(confirmation);
+
+        if (!confirmationRecorded) {
+            return null;
+        }
+
         cart.clearCart();
 
         return confirmation;
     }
-
-//     Counts loans that have not been returned yet.
-
-    public int countActiveLoans(List<Loan> currentLoans) {
-        if (currentLoans == null) {
-            return 0;
-        }
-
-        int count = 0;
-
-        for (Loan loan : currentLoans) {
-            if (loan != null && !loan.isReturned()) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
-// confirmation number
 
     public String generateConfirmationNumber() {
         return "CHK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
