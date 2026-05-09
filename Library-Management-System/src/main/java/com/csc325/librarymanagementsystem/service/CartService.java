@@ -10,7 +10,6 @@ import com.csc325.librarymanagementsystem.model.User;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CartService {
@@ -95,12 +94,11 @@ public class CartService {
         Date checkoutDate = new Date();
 
         CheckoutConfirmation confirmation = new CheckoutConfirmation(
-                generateConfirmationNumber(),
+                null,
                 user.getUserId(),
                 bookIds,
                 checkoutDate
         );
-
         for (Book book : cart.getBooks()) {
             boolean stockUpdated = firebaseContext.adjustStock(book.getBookId(), -1);
 
@@ -114,7 +112,7 @@ public class CartService {
             Date dueDate = dueDateCalendar.getTime();
 
             Loan loan = new Loan(
-                    UUID.randomUUID().toString(),
+                    null,
                     book.getBookId(),
                     user.getUserId(),
                     checkoutDate,
@@ -141,7 +139,4 @@ public class CartService {
         return confirmation;
     }
 
-    public String generateConfirmationNumber() {
-        return "CHK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-    }
 }

@@ -140,18 +140,4 @@ class CartServiceTest {
         assertNull(confirmation);
     }
 
-    @Test
-    void generateConfirmationNumberShouldStartWithChk() {
-        String confirmationNumber = cartService.generateConfirmationNumber();
-
-        assertNotNull(confirmationNumber);
-        assertTrue(confirmationNumber.startsWith("CHK-"));
-    }
-
-    @Test
-    void generateConfirmationNumberShouldHaveExpectedLength() {
-        String confirmationNumber = cartService.generateConfirmationNumber();
-
-        assertEquals(12, confirmationNumber.length());
-    }
 }
