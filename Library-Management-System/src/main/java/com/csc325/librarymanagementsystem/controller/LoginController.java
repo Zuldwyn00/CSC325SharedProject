@@ -3,6 +3,7 @@ package com.csc325.librarymanagementsystem.controller;
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.User;
 import com.csc325.librarymanagementsystem.service.AuthService;
+import com.csc325.librarymanagementsystem.service.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -45,6 +46,8 @@ public class LoginController {
         User user = authService.authenticate(new FirebaseContext(), identifier, pin);
 
         if (user != null) {
+            Session.setCurrentUser(user);
+
             try {
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/csc325/librarymanagementsystem/MainScreen.fxml")
