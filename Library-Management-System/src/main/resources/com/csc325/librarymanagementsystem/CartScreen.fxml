@@ -58,8 +58,6 @@
 
                         <Button fx:id="loansButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Active Loans" />
 
-                        <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#onCheckoutClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Checkout" />
-
                         <Region VBox.vgrow="ALWAYS" />
 
                         <Separator prefWidth="164.0">
@@ -69,8 +67,6 @@
                         </Separator>
 
                         <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Profile" />
-
-                        <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Settings" />
 
                         <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#onSignOutClicked" prefHeight="34.0" prefWidth="143.0" styleClass="sign-out-button" text="Sign Out" />
 
@@ -99,6 +95,11 @@
 
                                 <ListView fx:id="cartListView" styleClass="dark-list" VBox.vgrow="ALWAYS" />
 
+                                <Label fx:id="messageLabel"
+                                       text=" "
+                                       wrapText="true"
+                                       styleClass="page-subtitle" />
+
                                 <Separator />
 
                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
@@ -109,7 +110,17 @@
 
                                         <Region HBox.hgrow="ALWAYS" />
 
-                                        <Button fx:id="clearbutton" mnemonicParsing="false" onAction="#onClearClicked" styleClass="menu-button-active" text="Clear Cart" />
+                                        <Button fx:id="clearbutton"
+                                                mnemonicParsing="false"
+                                                onAction="#onClearClicked"
+                                                styleClass="menu-button-active"
+                                                text="Clear Cart" />
+
+                                        <Button fx:id="confirmCheckoutButton"
+                                                mnemonicParsing="false"
+                                                onAction="#onConfirmCheckoutClicked"
+                                                styleClass="primary-button"
+                                                text="Confirm Checkout" />
 
                                     </children>
                                 </HBox>
