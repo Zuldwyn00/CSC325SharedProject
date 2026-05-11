@@ -1,5 +1,6 @@
 package com.csc325.librarymanagementsystem.controller;
 
+import com.csc325.librarymanagementsystem.service.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,6 +25,7 @@ public class CartController {
     }
     @FXML
     private void onSignOutClicked() {
+        Session.clear();
         navigateTo("/com/csc325/librarymanagementsystem/LoginScreen.fxml", signOutButton);
     }
 
