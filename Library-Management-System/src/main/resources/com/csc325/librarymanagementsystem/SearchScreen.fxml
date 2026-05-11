@@ -52,7 +52,7 @@
 
                         <Button fx:id="loansButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Active Loans" />
 
-                        <Button fx:id="checkoutNavButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Checkout" />
+                        <Button fx:id="checkoutButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Checkout" />
 
                         <Region VBox.vgrow="ALWAYS" />
 

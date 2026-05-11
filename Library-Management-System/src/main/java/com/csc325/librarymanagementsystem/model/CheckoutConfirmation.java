@@ -3,6 +3,7 @@ package com.csc325.librarymanagementsystem.model;
 import java.util.Date;
 import java.util.List;
 
+
 public class CheckoutConfirmation {
     private String confirmationNumber;
     private String userId;

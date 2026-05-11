@@ -31,6 +31,10 @@ public class MainController {
     @FXML private ImageView bookOfDayImage;
 
     @FXML
+    private void initialize() {
+        welcomeLabel.setText("Welcome, " + Session.getCurrentUser().getEmail());
+    }
+    @FXML
     private void searchButtonOnAction() {
         navigateTo("/com/csc325/librarymanagementsystem/SearchScreen.fxml", searchButton);
     }
@@ -41,7 +45,10 @@ public class MainController {
 
     }
     @FXML private void onLoansClicked()    { System.out.println("Loans clicked"); }
-    @FXML private void onCheckoutClicked() { System.out.println("Checkout clicked"); }
+    @FXML
+    private void onCheckoutClicked() {
+        navigateTo("/com/csc325/librarymanagementsystem/CheckoutScreen.fxml", checkoutButton);
+    }
     @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
     @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
 
