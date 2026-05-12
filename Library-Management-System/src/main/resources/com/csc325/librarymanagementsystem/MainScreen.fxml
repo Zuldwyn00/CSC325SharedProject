@@ -8,8 +8,8 @@
 
 <AnchorPane minHeight="400.0"
             minWidth="600.0"
-            prefHeight="400.0"
-            prefWidth="600.0"
+            prefHeight="700.0"
+            prefWidth="1100.0"
             stylesheets="@style.css"
             styleClass="root-pane"
             xmlns="http://javafx.com/javafx/17.0.12"
@@ -157,98 +157,104 @@
 
                         <Separator />
 
-                        <HBox spacing="16.0">
+                        <HBox alignment="CENTER"
+                              spacing="24.0"
+                              VBox.vgrow="ALWAYS">
 
                             <children>
 
-                                <VBox prefWidth="185.0"
-                                      spacing="10.0"
-                                      styleClass="search-card">
+                                <VBox alignment="TOP_CENTER"
+                                      maxWidth="Infinity"
+                                      spacing="14.0"
+                                      styleClass="feature-image-card"
+                                      HBox.hgrow="ALWAYS">
 
                                     <children>
 
-                                        <Label text="MOST LOANED BOOK"
-                                               styleClass="menu-label" />
+                                        <Label text="Book of The Day"
+                                               styleClass="feature-image-title" />
 
-                                        <HBox alignment="CENTER_LEFT"
-                                              spacing="12.0">
-
+                                        <StackPane alignment="CENTER"
+                                                   maxWidth="Infinity"
+                                                   prefHeight="360.0"
+                                                   styleClass="feature-image-frame"
+                                                   VBox.vgrow="ALWAYS">
                                             <children>
-
-                                                <ImageView fx:id="mostLoanedImage"
-                                                           fitHeight="110.0"
-                                                           fitWidth="80.0"
-                                                           preserveRatio="true" />
-
-                                                <VBox alignment="CENTER_LEFT"
-                                                      spacing="6.0">
-
-                                                    <children>
-
-                                                        <Label fx:id="mostLoanedTitle"
-                                                               text="Book Title"
-                                                               wrapText="true"
-                                                               styleClass="card-title" />
-
-                                                        <Label fx:id="mostLoanedAuthor"
-                                                               text="Author Name"
-                                                               styleClass="page-subtitle" />
-
-                                                        <Label fx:id="mostLoanedCount"
-                                                               text="0 active loans"
-                                                               styleClass="small-muted" />
-
-                                                    </children>
-                                                </VBox>
-
+                                                <ImageView fx:id="bookOfTheDayImage"
+                                                           fitHeight="320.0"
+                                                           fitWidth="320.0"
+                                                           preserveRatio="true"
+                                                           smooth="true" />
                                             </children>
-                                        </HBox>
+                                        </StackPane>
+
+                                        <VBox alignment="CENTER"
+                                              spacing="6.0">
+                                            <children>
+                                                <Label fx:id="bookOfDayTitle"
+                                                       text="Book Title"
+                                                       wrapText="true"
+                                                       styleClass="card-title" />
+
+                                                <Label fx:id="bookOfDayAuthor"
+                                                       text="Author Name"
+                                                       wrapText="true"
+                                                       styleClass="page-subtitle" />
+
+                                                <Label fx:id="bookOfDayGenre"
+                                                       text="Genre"
+                                                       wrapText="true"
+                                                       styleClass="small-muted" />
+                                            </children>
+                                        </VBox>
 
                                     </children>
                                 </VBox>
 
-                                <VBox prefWidth="185.0"
-                                      spacing="10.0"
-                                      styleClass="search-card">
+                                <VBox alignment="TOP_CENTER"
+                                      maxWidth="Infinity"
+                                      spacing="14.0"
+                                      styleClass="feature-image-card"
+                                      HBox.hgrow="ALWAYS">
 
                                     <children>
 
-                                        <Label text="BOOK OF THE DAY"
-                                               styleClass="menu-label" />
+                                        <Label text="Author of The Month"
+                                               styleClass="feature-image-title" />
 
-                                        <HBox alignment="CENTER_LEFT"
-                                              spacing="12.0">
-
+                                        <StackPane alignment="CENTER"
+                                                   maxWidth="Infinity"
+                                                   prefHeight="360.0"
+                                                   styleClass="feature-image-frame"
+                                                   VBox.vgrow="ALWAYS">
                                             <children>
-
-                                                <ImageView fx:id="bookOfDayImage"
-                                                           fitHeight="110.0"
-                                                           fitWidth="80.0"
-                                                           preserveRatio="true" />
-
-                                                <VBox alignment="CENTER_LEFT"
-                                                      spacing="6.0">
-
-                                                    <children>
-
-                                                        <Label fx:id="bookOfDayTitle"
-                                                               text="Book Title"
-                                                               wrapText="true"
-                                                               styleClass="card-title" />
-
-                                                        <Label fx:id="bookOfDayAuthor"
-                                                               text="Author Name"
-                                                               styleClass="page-subtitle" />
-
-                                                        <Label fx:id="bookOfDayGenre"
-                                                               text="Random pick of the day"
-                                                               styleClass="small-muted" />
-
-                                                    </children>
-                                                </VBox>
-
+                                                <ImageView fx:id="authorOfTheMonthImage"
+                                                           fitHeight="320.0"
+                                                           fitWidth="320.0"
+                                                           preserveRatio="true"
+                                                           smooth="true" />
                                             </children>
-                                        </HBox>
+                                        </StackPane>
+
+                                        <VBox alignment="CENTER"
+                                              spacing="6.0">
+                                            <children>
+                                                <Label fx:id="authorOfTheMonthTitle"
+                                                       text="Book Title"
+                                                       wrapText="true"
+                                                       styleClass="card-title" />
+
+                                                <Label fx:id="authorOfTheMonthAuthor"
+                                                       text="Author Name"
+                                                       wrapText="true"
+                                                       styleClass="page-subtitle" />
+
+                                                <Label fx:id="authorOfTheMonthGenre"
+                                                       text="Genre"
+                                                       wrapText="true"
+                                                       styleClass="small-muted" />
+                                            </children>
+                                        </VBox>
 
                                     </children>
                                 </VBox>
