@@ -109,17 +109,21 @@ public class CartController {
     @FXML
     private void onConfirmCheckoutClicked() {
 
-        if (Session.getCart() == null || Session.getCart().isEmpty()) {
-            messageLabel.setText("Your cart is empty.");
-            return;
-        }
+        try {
 
-        CheckoutConfirmation confirmation = cartService.checkout(
-                Session.getCurrentUser(),
-                Session.getCart()
-        );
+            if (Session.getCart() == null || Session.getCart().isEmpty()) {
+                messageLabel.setText("Your cart is empty.");
+                return;
+            }
 
-        if (confirmation != null) {
+            CheckoutConfirmation confirmation = cartService.checkout(
+                    Session.getCurrentUser(),
+                    Session.getCart()
+            );
+
+            if (confirmation == null) {
+                throw new Exception("Checkout failed.");
+            }
 
             refreshCart();
 
@@ -128,9 +132,11 @@ public class CartController {
                             + confirmation.getConfirmationNumber()
             );
 
-        } else {
+        } catch (Exception e) {
 
             messageLabel.setText("Checkout failed.");
+
+            e.printStackTrace();
         }
     }
 

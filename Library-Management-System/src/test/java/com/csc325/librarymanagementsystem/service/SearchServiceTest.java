@@ -4,6 +4,8 @@ import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.service.SearchService;
 import com.csc325.librarymanagementsystem.model.Book;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,19 +19,38 @@ class SearchServiceTest {
     @Test
     void normalsearch() {
         // Test 1: normal search
+        //mostly testing the search
         searchService.loadfirebasedata(firebaseContext);
         System.out.println("=== Test 1: Normal Search ===");
         List<Book> results1 = searchService.search("Steve Jobs", SearchType.TITLE);
-        searchService.printresults(results1, 5);
+        searchService.printresults(results1, results1.size());
+
+        assertEquals(4, results1.size());
     }
 
     @Test
     void max() {
-        // Test 2: more results than max
+
         searchService.loadfirebasedata(firebaseContext);
+
         System.out.println("=== Test 2: Limit smaller than results ===");
+
         List<Book> results2 = searchService.search("the", SearchType.TITLE);
-        searchService.printresults(results2,2);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+
+        System.setOut(new PrintStream(outputStream));
+
+        searchService.printresults(results2, 2);
+
+        System.setOut(originalOut);
+
+        String printedOutput = outputStream.toString();
+
+        int printedCount = printedOutput.split("Title:").length - 1;
+
+        assertEquals(2, printedCount);
     }
 
     @Test
@@ -40,15 +61,30 @@ class SearchServiceTest {
         List<Book> results3 = searchService.search("asdkjasdk", SearchType.TITLE);
         searchService.printresults(results3, 5);
 
+        assertEquals(0, results3.size());
     }
 
     @Test
-    void maxlarger(){
-        // Test 4: max larger than results
+    void printResultsRespectsMax() {
+
         searchService.loadfirebasedata(firebaseContext);
-        System.out.println("=== Test 4: Max > results ===");
-        List<Book> results4 = searchService.search("Dune", SearchType.TITLE);
-        searchService.printresults(results4, 10);
+
+        List<Book> results = searchService.search("Dune", SearchType.TITLE);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+
+        System.setOut(new PrintStream(outputStream));
+
+        searchService.printresults(results, 3);
+
+        System.setOut(originalOut);
+
+        String printedOutput = outputStream.toString();
+
+        int printedCount = printedOutput.split("Title:").length - 1;
+
+        assertTrue(printedCount <= 3);
     }
 
     @Test
@@ -58,6 +94,7 @@ class SearchServiceTest {
         System.out.println("=== Test 5: Empty Query ===");
         List<Book> results5 = searchService.search("", SearchType.TITLE);
         searchService.printresults(results5, 5);
+        assertEquals(0, results5.size());
 
     }
 

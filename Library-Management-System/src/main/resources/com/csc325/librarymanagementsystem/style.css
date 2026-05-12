@@ -153,3 +153,23 @@
     -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
+.dark-list .list-cell {
+    -fx-text-fill: white;
+}
+
+.dark-list .list-cell:selected {
+    -fx-background-color: #3b4a5a;
+    -fx-text-fill: white;
+}
+
+.dark-list .list-cell:selected .label {
+    -fx-text-fill: white;
+}
+
+.dark-list .list-cell:focused {
+    -fx-background-color: #3b4a5a;
+}
+
+.dark-list .button {
+    -fx-text-fill: white;
+}
