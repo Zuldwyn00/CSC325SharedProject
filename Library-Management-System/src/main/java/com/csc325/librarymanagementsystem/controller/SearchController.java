@@ -5,6 +5,8 @@ import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.service.SearchService;
 import com.csc325.librarymanagementsystem.service.SearchType;
 import com.csc325.librarymanagementsystem.service.Session;
+import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +22,7 @@ import java.util.List;
 public class SearchController {
 
     @FXML private TextField SearchTextField;
-    @FXML private TextField maxtext;
+    @FXML private ChoiceBox<Integer> maxtext;
 
     @FXML private ChoiceBox<SearchType> SearchTypeChoice;
     @FXML private ListView<Book> resultsList;
@@ -38,11 +40,47 @@ public class SearchController {
 
     private final SearchService searchService = new SearchService();
     private final FirebaseContext firebaseContext = new FirebaseContext();
+    private final Image defaultBookImage =
+            new Image(getClass().getResourceAsStream("/com/csc325/librarymanagementsystem/images/no-image.png"));
+    private final java.util.Map<String, Image> imageCache = new java.util.HashMap<>();
 
     @FXML
     private void initialize() {
         SearchTypeChoice.getItems().addAll(SearchType.values());
         SearchTypeChoice.setValue(SearchType.TITLE);
+
+        maxtext.getItems().addAll(5, 10, 25, 50);
+        maxtext.setValue(5);
+
+        resultsList.setPlaceholder(new Label("Loading books..."));
+        searchButton.setDisable(true);
+
+        //This makes it so it loads it in the background
+        Task<Void> loadTask = new Task<>() {
+            @Override
+            protected Void call()  {
+                searchService.loadfirebasedata(firebaseContext);
+                return null;
+            }
+        };
+        //hides the search button until its done so that they cant spam click it
+        loadTask.setOnSucceeded(e -> {
+            searchButton.setDisable(false);
+            Label hold = new Label("Search for a book to begin.");
+            hold.setStyle("-fx-text-fill: white;");
+            resultsList.setPlaceholder(hold);
+
+
+        });
+
+        loadTask.setOnFailed(e -> {
+            searchButton.setDisable(true);
+            resultsList.setPlaceholder(new Label("Could not load books. Please try again later."));
+            loadTask.getException().printStackTrace();
+        });
+
+        //actually starts the task
+        new Thread(loadTask).start();
 
         resultsList.setCellFactory(listView -> new ListCell<Book>() {
             private final ImageView imageView = new ImageView();
@@ -51,13 +89,15 @@ public class SearchController {
             private final HBox row = new HBox(15);
 
             {
+                imageView.setImage(defaultBookImage);
                 imageView.setFitWidth(80);
                 imageView.setFitHeight(115);
                 imageView.setPreserveRatio(true);
 
                 textLabel.setWrapText(true);
+                checkoutButton.setStyle("-fx-text-fill: black;");
 
-                row.getChildren().addAll(textLabel, checkoutButton, imageView);
+                row.getChildren().addAll(imageView, textLabel, checkoutButton);
             }
 
             @Override
@@ -65,13 +105,39 @@ public class SearchController {
                 super.updateItem(book, empty);
 
                 if (empty || book == null) {
+                    imageView.setImage(null);
+                    textLabel.setText(null);
+                    checkoutButton.setOnAction(null);
                     setGraphic(null);
                     return;
                 }
 
-                Image image = new Image(book.getCoverImageUrl());
+                setGraphic(row);
 
-                imageView.setImage(image);
+                imageView.setImage(defaultBookImage);
+
+                String coverUrl = book.getCoverImageUrl();
+
+                if (coverUrl != null && !coverUrl.isBlank()) {
+
+                    //im caching the images so it doesnt refresh when i click on  them
+                    if (imageCache.containsKey(coverUrl)) {
+                        imageView.setImage(imageCache.get(coverUrl));
+                    } else {
+                        Image image = new Image(coverUrl, true);
+
+                        image.progressProperty().addListener((obs, oldVal, newVal) -> {
+                            if (newVal.doubleValue() >= 1.0 && getItem() == book) {
+                                if (!image.isError()) {
+                                    imageCache.put(coverUrl, image);
+                                    imageView.setImage(image);
+                                } else {
+                                    imageView.setImage(defaultBookImage);
+                                }
+                            }
+                        });
+                    }
+                }
 
                 textLabel.setText(
                         "Title: " + book.getTitle() + "\n" +
@@ -86,31 +152,38 @@ public class SearchController {
                 checkoutButton.setManaged(available);
                 checkoutButton.setDisable(!available);
 
+                boolean inCart = Session.getCart().getBooks().contains(book);
+
+                if (inCart) {
+                    checkoutButton.setText("Remove from Cart");
+                } else {
+                    checkoutButton.setText("Add to Cart");
+                }
+
                 checkoutButton.setOnAction(e -> {
-                    System.out.println("added to cart: " + book.getTitle());
-                    Session.getCart().addBook(book);
-
+                    if (Session.getCart().getBooks().contains(book)) {
+                        Session.getCart().removeBook(book.getBookId());
+                        checkoutButton.setText("Add to Cart");
+                        System.out.println("removed from cart: " + book.getTitle());
+                    } else {
+                        Session.getCart().addBook(book);
+                        checkoutButton.setText("Remove from Cart");
+                        System.out.println("added to cart: " + book.getTitle());
+                    }
                 });
-
-                setGraphic(row);
             }
         });
     }
 
     @FXML
     private void searchButtonOnAction() {
+
         SearchType type = SearchTypeChoice.getValue();
         String searchText = SearchTextField.getText();
 
         int max = 5;
 
-        try {
-            max = Integer.parseInt(maxtext.getText());
-        } catch (NumberFormatException e) {
-            maxtext.setText("5");
-        }
-
-        searchService.loadfirebasedata(firebaseContext);
+        max = maxtext.getValue();
 
         List<Book> results = searchService.search(searchText, type);
 
@@ -121,15 +194,20 @@ public class SearchController {
 
         resultsList.getItems().clear();
 
+        //no books found if.. well if theres no books found
         if (results == null || results.isEmpty()) {
+            Label noResultsLabel = new Label("No books found.");
+            noResultsLabel.setStyle("-fx-text-fill: white;");
+            resultsList.setPlaceholder(noResultsLabel);
+
             return;
         }
 
-        resultsList.getItems().addAll(
+        resultsList.setItems(FXCollections.observableArrayList(
                 results.stream()
                         .limit(max)
                         .toList()
-        );
+        ));
     }
     @FXML
     private void onCheckoutClicked() {

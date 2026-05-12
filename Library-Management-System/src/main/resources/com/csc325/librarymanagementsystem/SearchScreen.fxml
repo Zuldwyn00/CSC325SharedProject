@@ -84,9 +84,8 @@
                             <children>
                                 <TextField fx:id="SearchTextField" promptText="Search..." HBox.hgrow="ALWAYS" />
 
-                                <TextField fx:id="maxtext" prefHeight="25.0" prefWidth="23.0" promptText="Max" text="5" />
-
                                 <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonOnAction" styleClass="primary-button" text="Search" />
+                        <ChoiceBox fx:id="maxtext" prefHeight="25.0" prefWidth="41.0" />
 
                                 <ChoiceBox fx:id="SearchTypeChoice" prefHeight="25.0" prefWidth="102.0" />
                             </children>
