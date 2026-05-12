@@ -6,8 +6,8 @@
 
 <AnchorPane minHeight="400.0"
             minWidth="600.0"
-            prefHeight="400.0"
-            prefWidth="600.0"
+            prefHeight="700.0"
+            prefWidth="1100.0"
             stylesheets="@style.css"
             styleClass="root-pane"
             xmlns="http://javafx.com/javafx/17.0.12"
