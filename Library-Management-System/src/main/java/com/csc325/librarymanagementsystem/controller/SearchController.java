@@ -51,7 +51,7 @@ public class SearchController {
         SearchTypeChoice.getItems().addAll(SearchType.values());
         SearchTypeChoice.setValue(SearchType.TITLE);
 
-        maxtext.getItems().addAll(5, 10, 25, 50);
+        maxtext.getItems().addAll(5, 10);
         maxtext.setValue(5);
 
         resultsList.setPlaceholder(new Label("Loading books..."));
