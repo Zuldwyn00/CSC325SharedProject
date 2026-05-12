@@ -14,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.util.Date;
@@ -32,7 +34,9 @@ public class CartController {
     @FXML private Label messageLabel;
 
     private final CartService cartService = new CartService();
-
+    private final Image defaultBookImage =
+            new Image(getClass().getResourceAsStream("/com/csc325/librarymanagementsystem/images/no-image.png"));
+    private final java.util.Map<String, Image> imageCache = new java.util.HashMap<>();
     @FXML
     public void initialize() {
         setupCartCells();
@@ -43,17 +47,25 @@ public class CartController {
         cartListView.setCellFactory(listView -> new ListCell<Book>() {
             private final ImageView imageView = new ImageView();
             private final Label textLabel = new Label();
+            private final Region spacer = new Region();
             private final Button removeButton = new Button("Remove");
             private final HBox row = new HBox(15);
 
             {
+                imageView.setImage(defaultBookImage);
                 imageView.setFitWidth(80);
                 imageView.setFitHeight(115);
                 imageView.setPreserveRatio(true);
 
                 textLabel.setWrapText(true);
+                textLabel.setPrefWidth(220);
 
-                row.getChildren().addAll(textLabel, imageView, removeButton);
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                removeButton.setMinWidth(100);
+                removeButton.setStyle("-fx-text-fill: black;");
+
+                row.getChildren().addAll(imageView, textLabel, spacer, removeButton);
             }
 
             @Override
@@ -61,12 +73,38 @@ public class CartController {
                 super.updateItem(book, empty);
 
                 if (empty || book == null) {
+                    imageView.setImage(null);
+                    textLabel.setText(null);
+                    removeButton.setOnAction(null);
                     setGraphic(null);
                     return;
                 }
 
-                Image image = new Image(book.getCoverImageUrl());
-                imageView.setImage(image);
+                setGraphic(row);
+
+                imageView.setImage(defaultBookImage);
+
+                String coverUrl = book.getCoverImageUrl();
+
+                if (coverUrl != null && !coverUrl.isBlank()) {
+
+                    if (imageCache.containsKey(coverUrl)) {
+                        imageView.setImage(imageCache.get(coverUrl));
+                    } else {
+                        Image image = new Image(coverUrl, true);
+
+                        image.progressProperty().addListener((obs, oldVal, newVal) -> {
+                            if (newVal.doubleValue() >= 1.0 && getItem() == book) {
+                                if (!image.isError()) {
+                                    imageCache.put(coverUrl, image);
+                                    imageView.setImage(image);
+                                } else {
+                                    imageView.setImage(defaultBookImage);
+                                }
+                            }
+                        });
+                    }
+                }
 
                 textLabel.setText(
                         "Title: " + book.getTitle() + "\n" +
@@ -80,8 +118,6 @@ public class CartController {
                     Session.getCart().removeBook(book.getBookId());
                     refreshCart();
                 });
-
-                setGraphic(row);
             }
         });
     }
