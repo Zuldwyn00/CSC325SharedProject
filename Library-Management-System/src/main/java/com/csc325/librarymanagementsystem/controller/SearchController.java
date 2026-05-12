@@ -16,6 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.Priority;
 
 import java.util.List;
 
@@ -85,6 +87,7 @@ public class SearchController {
         resultsList.setCellFactory(listView -> new ListCell<Book>() {
             private final ImageView imageView = new ImageView();
             private final Label textLabel = new Label();
+            private final Region spacer = new Region();
             private final Button checkoutButton = new Button("Add to Cart");
             private final HBox row = new HBox(15);
 
@@ -95,9 +98,14 @@ public class SearchController {
                 imageView.setPreserveRatio(true);
 
                 textLabel.setWrapText(true);
+                textLabel.setPrefWidth(220);
+
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                checkoutButton.setMinWidth(120);
                 checkoutButton.setStyle("-fx-text-fill: black;");
 
-                row.getChildren().addAll(imageView, textLabel, checkoutButton);
+                row.getChildren().addAll(imageView, textLabel, spacer, checkoutButton);
             }
 
             @Override
