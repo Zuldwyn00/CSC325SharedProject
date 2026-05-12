@@ -104,13 +104,6 @@
                                 prefWidth="143.0"
                                 styleClass="menu-button" />
 
-                        <Button fx:id="checkoutButton"
-                                text="Checkout"
-                                mnemonicParsing="false"
-                                onAction="#onCheckoutClicked"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="menu-button" />
 
                         <Region VBox.vgrow="ALWAYS" />
 
@@ -128,13 +121,6 @@
                                 prefWidth="143.0"
                                 styleClass="menu-button" />
 
-                        <Button fx:id="settingsButton"
-                                text="Settings"
-                                mnemonicParsing="false"
-                                onAction="#onSettingsClicked"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="menu-button" />
 
                         <Button fx:id="signOutButton"
                                 text="Sign Out"

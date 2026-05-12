@@ -4,6 +4,7 @@ import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.service.SearchService;
 import com.csc325.librarymanagementsystem.service.SearchType;
+import com.csc325.librarymanagementsystem.service.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,6 +34,7 @@ public class SearchController {
     @FXML private Button settingsButton;
     @FXML private Button signOutButton;
     @FXML private Button notificationButton;
+    @FXML private Button checkoutButton;
 
     private final SearchService searchService = new SearchService();
     private final FirebaseContext firebaseContext = new FirebaseContext();
@@ -45,7 +47,7 @@ public class SearchController {
         resultsList.setCellFactory(listView -> new ListCell<Book>() {
             private final ImageView imageView = new ImageView();
             private final Label textLabel = new Label();
-            private final Button checkoutButton = new Button("Check Out");
+            private final Button checkoutButton = new Button("Add to Cart");
             private final HBox row = new HBox(15);
 
             {
@@ -85,7 +87,9 @@ public class SearchController {
                 checkoutButton.setDisable(!available);
 
                 checkoutButton.setOnAction(e -> {
-                    System.out.println("Checkout clicked for: " + book.getTitle());
+                    System.out.println("added to cart: " + book.getTitle());
+                    Session.getCart().addBook(book);
+
                 });
 
                 setGraphic(row);
@@ -114,19 +118,23 @@ public class SearchController {
     }
 
     public void displayResults(List<Book> results, int max) {
+
         resultsList.getItems().clear();
 
         if (results == null || results.isEmpty()) {
             return;
         }
 
-        int limit = Math.min(max, results.size());
-
-        for (int i = 0; i < limit; i++) {
-            resultsList.getItems().add(results.get(i));
-        }
+        resultsList.getItems().addAll(
+                results.stream()
+                        .limit(max)
+                        .toList()
+        );
     }
-
+    @FXML
+    private void onCheckoutClicked() {
+        navigateTo("/com/csc325/librarymanagementsystem/CheckoutScreen.fxml", checkoutButton);
+    }
     @FXML
     private void onHomeClicked() {
         navigateTo("/com/csc325/librarymanagementsystem/MainScreen.fxml", homeButton);
@@ -138,7 +146,6 @@ public class SearchController {
     }
 
     @FXML private void onLoansClicked()    { System.out.println("Loans clicked"); }
-    @FXML private void onCheckoutClicked() { System.out.println("Checkout clicked"); }
     @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
     @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
 
