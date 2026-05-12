@@ -66,6 +66,7 @@ public class CheckoutController {
             return;
         }
 
+
         List<String> bookIds = books.stream()
                 .map(Book::getBookId)
                 .collect(Collectors.toList());

@@ -9,6 +9,7 @@ module com.csc325.librarymanagementsystem {
     requires com.google.api.apicommon;
     requires javafx.graphics;
     requires java.desktop;
+    requires com.csc325.librarymanagementsystem;
 
     opens com.csc325.librarymanagementsystem.model to google.cloud.firestore, com.google.api.apicommon;
     opens com.csc325.librarymanagementsystem to javafx.fxml;

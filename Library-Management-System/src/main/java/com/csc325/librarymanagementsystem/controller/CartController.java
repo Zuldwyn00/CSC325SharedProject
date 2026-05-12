@@ -3,6 +3,8 @@ package com.csc325.librarymanagementsystem.controller;
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
+import com.csc325.librarymanagementsystem.service.CartService;
+import com.csc325.librarymanagementsystem.service.SearchService;
 import com.csc325.librarymanagementsystem.service.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +30,8 @@ public class CartController {
     @FXML private ListView<Book> cartListView;
     @FXML private Label itemCounterLabel;
     @FXML private Label messageLabel;
+
+    private final CartService cartService = new CartService();
 
     @FXML
     public void initialize() {
@@ -104,41 +108,28 @@ public class CartController {
 
     @FXML
     private void onConfirmCheckoutClicked() {
-        List<Book> books = Session.getCart().getBooks();
 
-        if (books == null || books.isEmpty()) {
+        if (Session.getCart() == null || Session.getCart().isEmpty()) {
             messageLabel.setText("Your cart is empty.");
             return;
         }
 
-        List<String> bookIds = books.stream()
-                .map(Book::getBookId)
-                .collect(Collectors.toList());
-
-        String userId = Session.getCurrentUser().getUserId();
-
-        CheckoutConfirmation confirmation = new CheckoutConfirmation(
-                null,
-                userId,
-                bookIds,
-                new Date()
+        CheckoutConfirmation confirmation = cartService.checkout(
+                Session.getCurrentUser(),
+                Session.getCart()
         );
 
-        FirebaseContext firebaseContext = new FirebaseContext();
+        if (confirmation != null) {
 
-        boolean success = firebaseContext
-                .checkouts()
-                .recordCheckoutConfirmation(confirmation);
-
-        if (success) {
-            Session.getCart().clearCart();
             refreshCart();
 
             messageLabel.setText(
                     "Checkout complete! Confirmation #: "
                             + confirmation.getConfirmationNumber()
             );
+
         } else {
+
             messageLabel.setText("Checkout failed.");
         }
     }
