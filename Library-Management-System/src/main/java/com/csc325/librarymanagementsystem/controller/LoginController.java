@@ -56,7 +56,8 @@ public class LoginController {
                 Parent root = loader.load();
 
                 Stage stage = (Stage) loginButton.getScene().getWindow();
-                stage.setScene(new Scene(root));
+                Scene currentScene = loginButton.getScene();
+                stage.setScene(new Scene(root, currentScene.getWidth(), currentScene.getHeight()));
                 stage.show();
 
             } catch (Exception e) {
