@@ -74,13 +74,20 @@ public class FirebaseContext {
 
 
         for (Book book : newBooks) {
-            if (book == null || book.getBookId() == null || book.getBookId().isBlank()) {
-                throw new IllegalArgumentException("bookId cannot be null or blank.");
+            if (book == null) {
+                throw new IllegalArgumentException("book cannot be null.");
             }
 
-            DocumentReference bookDocument = db.collection(BOOKS_COLLECTION).document(book.getBookId());
+            DocumentReference bookDocument;
+            if (book.getBookId() == null || book.getBookId().isBlank()) {
+                bookDocument = db.collection(BOOKS_COLLECTION).document();
+                book.setBookId(bookDocument.getId());
+            } else {
+                bookDocument = db.collection(BOOKS_COLLECTION).document(book.getBookId());
+            }
+
             try {
-                bookDocument.create(book).get(); //firebase already detects duplicate Document ID's, no need to have a manual check
+                bookDocument.create(book).get();
                 addedBook = true;
             } catch (ExecutionException | InterruptedException e) {
                 System.err.println("Error adding book " + book.getBookId() + ": " + e.getMessage());
