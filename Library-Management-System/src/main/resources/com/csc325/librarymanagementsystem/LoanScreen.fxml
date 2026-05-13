@@ -10,126 +10,72 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.LoanController">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="700.0" prefWidth="1100.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.LoanController">
     <children>
-        <BorderPane layoutX="1.0" prefHeight="400.0" prefWidth="600.0">
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
-                <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="600.0" style="-fx-background-color: #223355;" BorderPane.alignment="CENTER">
+                <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="600.0" styleClass="top-bar">
                     <children>
-                        <HBox prefHeight="26.0" prefWidth="600.0" style="-fx-background-color: Label;">
-                            <children>
-                                <Region prefHeight="200.0" prefWidth="10.0" />
-                                <Button fx:id="homeButton" mnemonicParsing="false" onAction="#onHomeClicked" prefHeight="54.0" prefWidth="54.0" style="-fx-background-color: TRANSPARENT;" text="Home" textFill="WHITE" />
-                                <Region prefHeight="55.0" prefWidth="16.0" />
-                                <Label prefHeight="58.0" prefWidth="44.0" text="Library" textFill="WHITE">
-                                    <font>
-                                        <Font name="System Bold" size="15.0" />
-                                    </font>
-                                </Label>
-                                <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                <Label fx:id="welcomeLabel" prefHeight="58.0" prefWidth="52.0" text="Welcome" textFill="#cbd5e1" />
-                                <Region prefHeight="200.0" prefWidth="16.0" />
-                                <Button fx:id="notificationButton" mnemonicParsing="false" prefHeight="55.0" prefWidth="86.0" style="-fx-background-color: TRANSPARENT; -fx-text-fill: WHITE; -fx-font-size: 12px;" text="Notifications" />
-                                <Region prefHeight="200.0" prefWidth="8.0" />
-                            </children>
-                        </HBox>
+                        <Region prefWidth="10.0" />
+                        <Label styleClass="app-title" text="Library" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="welcomeLabel" styleClass="top-subtitle" text="Welcome" />
+                        <Region prefWidth="16.0" />
+                        <Button fx:id="notificationButton" mnemonicParsing="false" prefHeight="55.0" prefWidth="86.0" styleClass="top-button" text="Notifications" />
+                        <Region prefWidth="8.0" />
                     </children>
                 </HBox>
             </top>
             <left>
-                <VBox prefHeight="345.0" prefWidth="156.0" style="-fx-background-color: #2a2a2a;" BorderPane.alignment="CENTER">
+                <VBox prefHeight="345.0" prefWidth="156.0" styleClass="side-bar">
                     <padding>
                         <Insets left="10.0" top="10.0" />
                     </padding>
                     <children>
-                        <Label text="MENU" textFill="#a8a8a8">
-                            <font>
-                                <Font name="System Bold" size="11.0" />
-                            </font>
-                        </Label>
-                        <Separator prefWidth="200.0">
+                        <Label styleClass="menu-label" text="MENU" />
+                        <Separator prefWidth="164.0">
                             <VBox.margin>
                                 <Insets bottom="4.0" top="4.0" />
                             </VBox.margin>
                         </Separator>
-                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#onSearchClicked" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: TRANSPARENT; -fx-alignment: CENTER-LEFT;" text="Search Books" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="cartButton" mnemonicParsing="false" onAction="#onCartClicked" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: TRANSPARENT; -fx-alignment: CENTER-LEFT;" text="My Cart" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="loansButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: #333333; -fx-alignment: CENTER-LEFT;" text="Active Loans" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="checkOutButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: TRANSPARENT; -fx-alignment: CENTER-LEFT;" text="Checkout" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
-                        <Region prefHeight="75.0" prefWidth="146.0" VBox.vgrow="ALWAYS" />
-                        <Separator prefWidth="164.0" />
-                        <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: TRANSPARENT; -fx-alignment: CENTER-LEFT;" text="Profile" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: TRANSPARENT; -fx-alignment: CENTER-LEFT;" text="Settings" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#onSignOutClicked" prefHeight="34.0" prefWidth="143.0" style="-fx-background-color: TRANSPARENT; -fx-alignment: CENTER-LEFT;" text="Sign Out" textFill="#e44848">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
-                        </Button>
+                        <Button fx:id="homeButton" mnemonicParsing="false" onAction="#onHomeClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Home" />
+                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#onSearchClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Search Books" />
+                        <Button fx:id="cartButton" mnemonicParsing="false" onAction="#onCartClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="My Cart" />
+                        <Button fx:id="loansButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button-active" text="Active Loans" />
+                        <Region VBox.vgrow="ALWAYS" />
+                        <Separator prefWidth="164.0">
+                            <VBox.margin>
+                                <Insets bottom="4.0" />
+                            </VBox.margin>
+                        </Separator>
+                        <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Profile" />
+                        <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#onSignOutClicked" prefHeight="34.0" prefWidth="143.0" styleClass="sign-out-button" text="Sign Out" />
                     </children>
-                    <BorderPane.margin>
-                        <Insets bottom="4.0" top="4.0" />
-                    </BorderPane.margin>
                 </VBox>
             </left>
             <center>
-                <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                <VBox prefHeight="345.0" prefWidth="444.0" spacing="16.0" styleClass="content-pane">
+                    <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+                    </padding>
                     <children>
-                        <Region prefHeight="345.0" prefWidth="32.0" />
-                        <VBox prefHeight="345.0" prefWidth="408.0">
+                        <Label styleClass="page-title" text="Active Loans" />
+                        <Label styleClass="page-subtitle" text="Your currently borrowed books." />
+                        <Separator />
+                        <VBox spacing="12.0" styleClass="search-card" VBox.vgrow="ALWAYS">
                             <children>
-                                <Region prefHeight="7.0" prefWidth="399.0" />
-                                <Label text="Active Loans" textFill="WHITE">
-                                    <font>
-                                        <Font size="28.0" />
-                                    </font>
-                                </Label>
-                                <Region prefHeight="7.0" prefWidth="399.0" />
-                                <Separator prefWidth="200.0" />
-                                <Region prefHeight="14.0" prefWidth="399.0" />
-                                <ListView fx:id="loanListView" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #2a2a2a;" />
-                                <Region prefHeight="20.0" prefWidth="399.0" />
-                                <Separator prefWidth="200.0" />
-                                <Region prefHeight="9.0" prefWidth="399.0" />
-                                <HBox prefHeight="34.0" prefWidth="399.0">
+                                <ListView fx:id="loanListView" styleClass="dark-list" VBox.vgrow="ALWAYS" />
+                                <Separator />
+                                <HBox alignment="CENTER_LEFT" spacing="10.0">
                                     <children>
-                                        <Label fx:id="loanCounterLabel" text="0 active loans" textFill="#6f6d6d">
-                                            <font>
-                                                <Font size="19.0" />
-                                            </font>
-                                        </Label>
+                                        <Label fx:id="loanCounterLabel" styleClass="menu-label" text="0 active loans" />
                                     </children>
                                 </HBox>
                             </children>
                         </VBox>
-                        <Region prefHeight="345.0" prefWidth="32.0" />
                     </children>
-                </HBox>
+                </VBox>
             </center>
         </BorderPane>
     </children>

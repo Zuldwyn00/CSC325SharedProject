@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="700.0" prefWidth="1100.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.SearchController">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="700.0" prefWidth="1100.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.SearchController">
 
     <children>
         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -50,7 +59,7 @@
 
                         <Button fx:id="cartButton" mnemonicParsing="false" onAction="#onCartClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="My Cart" />
 
-                        <Button fx:id="loansButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Active Loans" />
+                        <Button fx:id="loansButton" mnemonicParsing="false" onAction="#onLoansClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Active Loans" />
 
                         <Region VBox.vgrow="ALWAYS" />
 
