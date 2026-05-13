@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="400.0"
+            minWidth="600.0"
+            prefHeight="700.0"
+            prefWidth="1100.0"
+            stylesheets="@style.css"
+            styleClass="root-pane"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.csc325.librarymanagementsystem.controller.CheckoutController">
+
+    <children>
+        <BorderPane AnchorPane.topAnchor="0.0"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0">
+
+            <top>
+                <HBox alignment="CENTER_LEFT"
+                      prefHeight="55.0"
+                      prefWidth="600.0"
+                      styleClass="top-bar">
+
+                    <children>
+                        <Region prefWidth="10.0" />
+
+                        <Label text="Library"
+                               styleClass="app-title" />
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <Label text="Checkout"
+                               styleClass="top-subtitle" />
+
+                        <Region prefWidth="16.0" />
+
+                        <Button fx:id="notificationButton"
+                                text="Notifications"
+                                mnemonicParsing="false"
+                                prefHeight="55.0"
+                                prefWidth="86.0"
+                                styleClass="top-button" />
+
+                        <Region prefWidth="8.0" />
+                    </children>
+                </HBox>
+            </top>
+
+            <left>
+                <VBox prefHeight="345.0"
+                      prefWidth="156.0"
+                      styleClass="side-bar">
+
+                    <padding>
+                        <Insets left="10.0" top="10.0" />
+                    </padding>
+
+                    <children>
+                        <Label text="MENU"
+                               styleClass="menu-label" />
+
+                        <Separator prefWidth="164.0">
+                            <VBox.margin>
+                                <Insets bottom="4.0" top="4.0" />
+                            </VBox.margin>
+                        </Separator>
+
+                        <Button fx:id="homeButton"
+                                text="Home"
+                                mnemonicParsing="false"
+                                onAction="#onHomeClicked"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="menu-button" />
+
+                        <Button fx:id="searchButton"
+                                text="Search Books"
+                                mnemonicParsing="false"
+                                onAction="#onSearchClicked"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="menu-button" />
+
+                        <Button fx:id="cartButton"
+                                text="My Cart"
+                                mnemonicParsing="false"
+                                onAction="#onCartClicked"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="menu-button" />
+
+                        <Button fx:id="loansButton"
+                                text="Active Loans"
+                                mnemonicParsing="false"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="menu-button" />
+
+                        <Button fx:id="checkoutNavButton"
+                                text="Checkout"
+                                mnemonicParsing="false"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="menu-button-active" />
+
+                        <Region VBox.vgrow="ALWAYS" />
+
+                        <Separator prefWidth="164.0">
+                            <VBox.margin>
+                                <Insets bottom="4.0" />
+                            </VBox.margin>
+                        </Separator>
+
+                        <Button fx:id="profileButton"
+                                text="Profile"
+                                mnemonicParsing="false"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="menu-button" />
+
+                        <Button fx:id="settingsButton"
+                                text="Settings"
+                                mnemonicParsing="false"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="menu-button" />
+
+                        <Button fx:id="signOutButton"
+                                text="Sign Out"
+                                mnemonicParsing="false"
+                                onAction="#onSignOutClicked"
+                                prefHeight="34.0"
+                                prefWidth="143.0"
+                                styleClass="sign-out-button" />
+                    </children>
+                </VBox>
+            </left>
+
+            <center>
+                <VBox prefHeight="345.0"
+                      prefWidth="444.0"
+                      spacing="16.0"
+                      styleClass="content-pane">
+
+                    <padding>
+                        <Insets bottom="24.0"
+                                left="24.0"
+                                right="24.0"
+                                top="24.0" />
+                    </padding>
+
+                    <children>
+                        <Label text="Checkout"
+                               styleClass="page-title" />
+
+                        <Label text="Confirm your selected books before completing checkout."
+                               styleClass="page-subtitle" />
+
+                        <Separator />
+
+                        <VBox spacing="12.0"
+                              VBox.vgrow="ALWAYS"
+                              styleClass="search-card">
+
+                            <children>
+                                <Label fx:id="cartSummaryLabel"
+                                       text="Books selected: 0"
+                                       styleClass="page-subtitle" />
+
+                                <ListView fx:id="checkoutListView"
+                                          VBox.vgrow="ALWAYS"
+                                          styleClass="dark-list" />
+
+                                <Separator />
+
+                                <Label fx:id="messageLabel"
+                                       text=""
+                                       wrapText="true"
+                                       styleClass="page-subtitle" />
+
+                                <HBox alignment="CENTER_LEFT"
+                                      spacing="10.0">
+
+                                    <children>
+                                        <Button fx:id="backToCartButton"
+                                                text="Back to Cart"
+                                                mnemonicParsing="false"
+                                                onAction="#onCartClicked"
+                                                styleClass="menu-button-active" />
+
+                                        <Region HBox.hgrow="ALWAYS" />
+
+                                        <Button fx:id="confirmCheckoutButton"
+                                                text="Confirm Checkout"
+                                                mnemonicParsing="false"
+                                                onAction="#onConfirmCheckoutClicked"
+                                                styleClass="primary-button" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>

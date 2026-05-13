@@ -74,13 +74,20 @@ public class FirebaseContext {
 
 
         for (Book book : newBooks) {
-            if (book == null || book.getBookId() == null || book.getBookId().isBlank()) {
-                throw new IllegalArgumentException("bookId cannot be null or blank.");
+            if (book == null) {
+                throw new IllegalArgumentException("book cannot be null.");
             }
 
-            DocumentReference bookDocument = db.collection(BOOKS_COLLECTION).document(book.getBookId());
+            DocumentReference bookDocument;
+            if (book.getBookId() == null || book.getBookId().isBlank()) {
+                bookDocument = db.collection(BOOKS_COLLECTION).document();
+                book.setBookId(bookDocument.getId());
+            } else {
+                bookDocument = db.collection(BOOKS_COLLECTION).document(book.getBookId());
+            }
+
             try {
-                bookDocument.create(book).get(); //firebase already detects duplicate Document ID's, no need to have a manual check
+                bookDocument.create(book).get();
                 addedBook = true;
             } catch (ExecutionException | InterruptedException e) {
                 System.err.println("Error adding book " + book.getBookId() + ": " + e.getMessage());
@@ -108,6 +115,29 @@ public class FirebaseContext {
             System.err.println("Error adjusting stock for " + bookId + ": " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean processReturn(String loanId) {
+        if (loanId == null || loanId.isBlank()) {return false;}
+
+        Loan loan = loans.getLoanByLoanId(loanId);
+        if (loan == null) {
+            System.err.println("Error returning loan: " + loanId + " - Loan not found");
+            return false;
+        }
+        if (loan.isReturned()) {
+            System.err.println("Error returning loan: " + loanId + " - Cannot return already returned loan");
+            return false;
+        }
+
+        Book book = getBookById(loan.getBookId());
+        if (book == null) {
+            System.err.println("Error returning loan: " + loanId + " - Book " + loan.getBookId() + " not found");
+            return false;
+        }
+
+        if (!loans.markLoanReturned(loanId)) {return false;} // return false if loan fails to get marked as returned
+        return adjustStock(loan.getBookId(), 1); // adjust stock of book +1
     }
 
     public User findUserByIdentifier(String identifier) {

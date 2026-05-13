@@ -5,7 +5,9 @@ import com.csc325.librarymanagementsystem.model.Book;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Comparator;
+import java.util.AbstractMap;
 
 
 public class SearchService {
@@ -19,47 +21,76 @@ public class SearchService {
     }
 
 
+    //switch the list to a map so that it can store scores so that i can order with scores
     public List<Book> search(String query, SearchType type) {
 
-        List<Book> results = new ArrayList<>();
+        List<Map.Entry<Book, Integer>> scoredResults = new ArrayList<>();
 
         if (query == null || query.isEmpty() || type == null || books == null) {
-            return results;
+            return new ArrayList<>();
         }
 
         query = query.trim().toLowerCase();
-        //huge switch case that filters the search
+
+        // huge switch case that filters the search
         for (Book book : books) {
 
             switch (type) {
 
                 case TITLE: {
+
+                    //split tittle into words for better compares
                     String[] queryWords = query.split("\\s+");
                     String[] titleWords = book.getTitle().toLowerCase().split("\\s+");
 
+                    int totalDistance = 0;
                     int matchCount = 0;
 
                     for (String qWord : queryWords) {
+
+                        int bestDistance = Integer.MAX_VALUE;
+
+                        //checks every word in the titte and gives them a best distance
                         for (String tWord : titleWords) {
-                            if (levenshtein(qWord, tWord) <= 2) {
-                                matchCount++;
-                                break;
+
+                            int distance = levenshtein(qWord, tWord);
+
+                            //keeps a score of the best distance
+                            if (distance < bestDistance) {
+                                bestDistance = distance;
                             }
                         }
+
+                        if (bestDistance <= 2) {
+                            matchCount++;
+                        }
+
+                        totalDistance += bestDistance;
                     }
 
+                    //gives it the best score in the map
                     if (matchCount >= Math.max(1, queryWords.length / 2)) {
-                        results.add(book);
+                        scoredResults.add(
+                                new AbstractMap.SimpleEntry<>(book, totalDistance)
+                        );
                     }
 
                     break;
                 }
 
                 case AUTHOR: {
+
                     for (String author : book.getAuthors()) {
+
+                        int distance = levenshtein(query, author.toLowerCase());
+
                         if (author.toLowerCase().contains(query)
-                                || levenshtein(query, author.toLowerCase()) <= 2) {
-                            results.add(book);
+                                || distance <= 2) {
+
+                            scoredResults.add(
+                                    new AbstractMap.SimpleEntry<>(book, distance)
+                            );
+
                             break;
                         }
                     }
@@ -68,9 +99,18 @@ public class SearchService {
                 }
 
                 case GENRE: {
+
                     for (String genre : book.getGenres()) {
-                        if (genre.toLowerCase().contains(query)) {
-                            results.add(book);
+
+                        int distance = levenshtein(query, genre.toLowerCase());
+
+                        if (genre.toLowerCase().contains(query)
+                                || distance <= 2) {
+
+                            scoredResults.add(
+                                    new AbstractMap.SimpleEntry<>(book, distance)
+                            );
+
                             break;
                         }
                     }
@@ -79,13 +119,31 @@ public class SearchService {
                 }
 
                 case ISBN: {
-                    if (book.getIsbn().equals(query)) {
-                        results.add(book);
+
+                    int distance = levenshtein(query, book.getIsbn());
+
+                    if (book.getIsbn().equals(query)
+                            || distance <= 2) {
+
+                        scoredResults.add(
+                                new AbstractMap.SimpleEntry<>(book, distance)
+                        );
                     }
 
                     break;
                 }
             }
+        }
+
+        //sorts the scores and then turns it back into a Array list so the rest of the code works fine
+        scoredResults.sort(
+                Comparator.comparingInt(Map.Entry::getValue)
+        );
+
+        List<Book> results = new ArrayList<>();
+
+        for (Map.Entry<Book, Integer> entry : scoredResults) {
+            results.add(entry.getKey());
         }
 
         return results;

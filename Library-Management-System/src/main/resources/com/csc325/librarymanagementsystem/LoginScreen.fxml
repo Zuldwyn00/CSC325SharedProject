@@ -3,50 +3,95 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.LoginController">
-    <top>
-        <Label alignment="CENTER" prefHeight="58.0" prefWidth="156.0" text="Welcome to Library!" BorderPane.alignment="CENTER">
-            <font>
-                <Font name="System Bold" size="18.0" />
-            </font>
-        </Label>
-    </top>
-    <opaqueInsets>
-        <Insets bottom="100.0" />
-    </opaqueInsets>
-    <center>
-        <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F5F5F5;" BorderPane.alignment="CENTER">
-            <children>
-                <GridPane layoutX="200.0" layoutY="126.0">
-                    <columnConstraints>
-                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+<AnchorPane minHeight="400.0"
+            minWidth="600.0"
+            prefHeight="700.0"
+            prefWidth="1100.0"
+            stylesheets="@style.css"
+            styleClass="root-pane"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.csc325.librarymanagementsystem.controller.LoginController">
+
+    <children>
+        <BorderPane AnchorPane.topAnchor="0.0"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0">
+
+            <top>
+                <HBox alignment="CENTER_LEFT"
+                      prefHeight="55.0"
+                      prefWidth="600.0"
+                      styleClass="top-bar">
                     <children>
-                        <Label text="Username">
-                            <font>
-                                <Font size="17.0" />
-                            </font>
-                        </Label>
-                        <Label text="Password" GridPane.rowIndex="1">
-                            <font>
-                                <Font size="17.0" />
-                            </font>
-                        </Label>
-                        <Button fx:id="loginButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="93.0" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="username" promptText="Username" GridPane.columnIndex="1" />
-                        <PasswordField fx:id="userPassword" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Region prefWidth="10.0" />
+                        <Label text="Library" styleClass="app-title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="Login" styleClass="top-subtitle" />
+                        <Region prefWidth="16.0" />
                     </children>
-                </GridPane>
-            <Label fx:id="errorMessage" layoutX="218.0" layoutY="14.0" prefHeight="42.0" prefWidth="164.0" textAlignment="CENTER" textFill="#ff0202" />
-            </children>
-        </AnchorPane>
-    </center>
-</BorderPane>
+                </HBox>
+            </top>
+
+            <center>
+                <StackPane styleClass="content-pane">
+                    <children>
+                        <VBox alignment="CENTER"
+                              maxWidth="320.0"
+                              spacing="14.0"
+                              styleClass="login-card">
+
+                            <children>
+                                <Label text="Welcome Back"
+                                       styleClass="page-title" />
+
+                                <Label text="Sign in to continue to your library account."
+                                       wrapText="true"
+                                       styleClass="page-subtitle" />
+
+                                <Separator />
+
+                                <VBox spacing="6.0">
+                                    <children>
+                                        <Label text="Email" styleClass="menu-label" />
+                                        <TextField fx:id="username"
+                                                   promptText="Email"
+                                                   prefHeight="34.0" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="6.0">
+                                    <children>
+                                        <Label text="Password" styleClass="menu-label" />
+                                        <PasswordField fx:id="userPassword"
+                                                       promptText="Password"
+                                                       prefHeight="34.0" />
+                                    </children>
+                                </VBox>
+
+                                <Label fx:id="errorMessage"
+                                       textAlignment="CENTER"
+                                       wrapText="true"
+                                       styleClass="error-label" />
+
+                                <Button fx:id="loginButton"
+                                        mnemonicParsing="false"
+                                        text="Login"
+                                        maxWidth="Infinity"
+                                        prefHeight="36.0"
+                                        styleClass="primary-button" />
+                            </children>
+
+                            <padding>
+                                <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+                            </padding>
+                        </VBox>
+                    </children>
+                </StackPane>
+            </center>
+
+        </BorderPane>
+    </children>
+</AnchorPane>
