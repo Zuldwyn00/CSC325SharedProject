@@ -33,6 +33,7 @@ public class CartController {
     @FXML private Label itemCounterLabel;
     @FXML private Label messageLabel;
     @FXML private Button loansButton;
+    @FXML private Button profileButton;
 
     private final CartService cartService = new CartService();
     private final Image defaultBookImage =
@@ -196,6 +197,10 @@ public class CartController {
     @FXML
     private void onLoansClicked() {
         navigateTo("/com/csc325/librarymanagementsystem/LoanScreen.fxml", loansButton);
+    }
+
+    @FXML private void onProfileClicked()  {
+        navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
     }
 
     private void navigateTo(String fxmlPath, Button source) {
