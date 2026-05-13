@@ -1,12 +1,16 @@
 package com.csc325.librarymanagementsystem.controller;
 
 import com.csc325.librarymanagementsystem.service.Session;
+import com.csc325.librarymanagementsystem.model.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
+import com.csc325.librarymanagementsystem.data.LoanContext;
+import com.csc325.librarymanagementsystem.data.FirebaseInitializer;
 
 public class ProfileController {
     @FXML
@@ -15,7 +19,28 @@ public class ProfileController {
     @FXML private Button signOutButton;
     @FXML private Button loansButton;
     @FXML private Button cartButton;
+    @FXML private Label welcomeLabel;
+    @FXML private Label profileInitialLabel;
+    @FXML private Label userEmail;
+    @FXML private Label userLibraryId;
+    @FXML private Label userId;
+    @FXML private Label activeLoansLabel;
 
+    @FXML void initialize(){
+        User user = Session.getCurrentUser();
+
+        welcomeLabel.setText("Welcome, " + user.getEmail());
+        userEmail.setText(user.getEmail());
+        userLibraryId.setText(user.getLibraryId());
+        userId.setText(user.getUserId());
+
+        String initial = user.getEmail().substring(0, 1).toLowerCase();
+        profileInitialLabel.setText(initial);
+
+        LoanContext loanContext = new LoanContext(FirebaseInitializer.getFirestore());
+        int activeLoans = loanContext.getActiveLoans(user.getUserId()).size();
+        activeLoansLabel.setText(String.valueOf(activeLoans));
+    }
 
     @FXML
     private void onHomeClicked() {
@@ -64,4 +89,6 @@ public class ProfileController {
             e.printStackTrace();
         }
     }
+
+
 }

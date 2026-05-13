@@ -97,6 +97,12 @@
                                     </children>
                                 </HBox>
                             </children>
+                            <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                <children>
+                                    <Label styleClass="small-muted" text="Active Loans:" />
+                                    <Label fx:id="activeLoansLabel" styleClass="page-subtitle" text="" />
+                                </children>
+                            </HBox>
                         </VBox>
 
                     </children>
