@@ -107,7 +107,9 @@ public class MainController {
         navigateTo("/com/csc325/librarymanagementsystem/CheckoutScreen.fxml", checkoutButton);
     }
 
-    @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
+    @FXML private void onProfileClicked()  {
+        navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
+    }
     @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
 
     @FXML

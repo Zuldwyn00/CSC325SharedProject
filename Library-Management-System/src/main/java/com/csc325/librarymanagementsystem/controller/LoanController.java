@@ -32,6 +32,8 @@ public class LoanController {
 
     private FirebaseContext firebase;
 
+    @FXML private Button profileButton;
+
     @FXML
     private void initialize(){
         firebase = new FirebaseContext();
@@ -84,6 +86,10 @@ public class LoanController {
     @FXML
     private void onSignOutClicked() {
         navigateTo("/com/csc325/librarymanagementsystem/LoginScreen.fxml", signOutButton);
+    }
+
+    @FXML private void onProfileClicked()  {
+        navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
     }
 
     private void navigateTo(String fxmlPath, Button source){

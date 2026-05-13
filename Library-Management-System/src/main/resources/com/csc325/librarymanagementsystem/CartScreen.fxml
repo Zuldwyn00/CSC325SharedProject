@@ -73,7 +73,7 @@
                             </VBox.margin>
                         </Separator>
 
-                        <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Profile" />
+                        <Button fx:id="profileButton" mnemonicParsing="false" onAction="#onProfileClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Profile" />
 
                         <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#onSignOutClicked" prefHeight="34.0" prefWidth="143.0" styleClass="sign-out-button" text="Sign Out" />
 
