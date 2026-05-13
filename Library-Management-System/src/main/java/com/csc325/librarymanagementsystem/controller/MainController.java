@@ -42,16 +42,13 @@ public class MainController {
 
     private void loadBookOfTheDayImage() {
         String imageUrl = "";
-
         if (imageUrl == null || imageUrl.isBlank()) {
             setNoImagePlaceholder(bookOfTheDayImage);
             return;
         }
-
         try {
             Image urlImage = new Image(imageUrl);
-
-            if (urlImage.isError()) { // URL import allows us to easily check if an image URL failed or load or not without having to write some complex custom logic.
+            if (urlImage.isError()) {
                 setNoImagePlaceholder(bookOfTheDayImage);
             } else {
                 bookOfTheDayImage.setImage(urlImage);
@@ -63,15 +60,12 @@ public class MainController {
 
     private void loadAuthorOfTheMonthImage() {
         String imageUrl = "";
-
         if (imageUrl == null || imageUrl.isBlank()) {
             setNoImagePlaceholder(authorOfTheMonthImage);
             return;
         }
-
         try {
             Image urlImage = new Image(imageUrl);
-
             if (urlImage.isError()) {
                 setNoImagePlaceholder(authorOfTheMonthImage);
             } else {
@@ -84,12 +78,10 @@ public class MainController {
 
     private void setNoImagePlaceholder(ImageView imageView) {
         URL noImageResource = getClass().getResource(NO_IMAGE_RESOURCE);
-
         if (noImageResource == null) {
             imageView.setImage(null);
             return;
         }
-
         imageView.setImage(new Image(noImageResource.toExternalForm()));
     }
 
@@ -99,16 +91,25 @@ public class MainController {
     }
 
     @FXML
-    private void onCartClicked(){
+    private void onCartClicked() {
         navigateTo("/com/csc325/librarymanagementsystem/CartScreen.fxml", cartButton);
-
     }
-    @FXML private void onLoansClicked()    { System.out.println("Loans clicked"); }
+
+    @FXML
+    private void onLoansClicked() {
+        // UI-LoansScreen: tu navegacion a LoanScreen
+        navigateTo("/com/csc325/librarymanagementsystem/LoanScreen.fxml", loansButton);
+    }
+
     @FXML
     private void onCheckoutClicked() {
+        // main: navegacion a CheckoutScreen
         navigateTo("/com/csc325/librarymanagementsystem/CheckoutScreen.fxml", checkoutButton);
     }
-    @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
+
+    @FXML private void onProfileClicked()  {
+        navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
+    }
     @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
 
     @FXML
@@ -121,19 +122,11 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
-
             Stage stage = (Stage) source.getScene().getWindow();
             Scene currentScene = source.getScene();
-
-            Scene newScene = new Scene(
-                    root,
-                    currentScene.getWidth(),
-                    currentScene.getHeight()
-            );
-
+            Scene newScene = new Scene(root, currentScene.getWidth(), currentScene.getHeight());
             stage.setScene(newScene);
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
