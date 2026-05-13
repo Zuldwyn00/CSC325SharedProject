@@ -1,6 +1,7 @@
 package com.csc325.librarymanagementsystem.service;
 
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
+import com.csc325.librarymanagementsystem.exception.CheckoutException;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.model.Cart;
 import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
@@ -81,9 +82,44 @@ public class CartService {
         return true;
     }
 
-    public CheckoutConfirmation checkout(User user, Cart cart) {
-        if (!canCheckout(user, cart)) {
-            return null;
+    public CheckoutConfirmation checkout(User user, Cart cart) throws CheckoutException {
+
+        if (user == null) {
+            throw new CheckoutException("Checkout failed: no user is currently logged in.");
+        }
+
+        if (cart == null || cart.isEmpty()) {
+            throw new CheckoutException("Checkout failed: your cart is empty.");
+        }
+
+        int activeLoanCount = firebaseContext.loans()
+                .getActiveLoans(user.getUserId())
+                .size();
+
+        if (activeLoanCount + cart.size() > MAX_CHECKOUT_LIMIT) {
+            throw new CheckoutException(
+                    "Checkout failed: you can only have "
+                            + MAX_CHECKOUT_LIMIT
+                            + " books checked out at once."
+            );
+        }
+
+        for (Book book : cart.getBooks()) {
+            if (book == null) {
+                throw new CheckoutException("Checkout failed: one of the books in your cart is invalid.");
+            }
+
+            if (book.getBookId() == null || book.getBookId().isBlank()) {
+                throw new CheckoutException("Checkout failed: one of the books is missing a book ID.");
+            }
+
+            if (book.getQuantity() <= 0) {
+                throw new CheckoutException(
+                        "Checkout failed: "
+                                + book.getTitle()
+                                + " is currently unavailable."
+                );
+            }
         }
 
         List<String> bookIds = cart.getBooks()
@@ -99,11 +135,16 @@ public class CartService {
                 bookIds,
                 checkoutDate
         );
+
         for (Book book : cart.getBooks()) {
             boolean stockUpdated = firebaseContext.adjustStock(book.getBookId(), -1);
 
             if (!stockUpdated) {
-                return null;
+                throw new CheckoutException(
+                        "Checkout failed: could not update stock for "
+                                + book.getTitle()
+                                + "."
+                );
             }
 
             Calendar dueDateCalendar = Calendar.getInstance();
@@ -123,7 +164,11 @@ public class CartService {
             boolean loanRecorded = firebaseContext.loans().recordLoan(loan);
 
             if (!loanRecorded) {
-                return null;
+                throw new CheckoutException(
+                        "Checkout failed: could not create loan for "
+                                + book.getTitle()
+                                + "."
+                );
             }
         }
 
@@ -131,7 +176,7 @@ public class CartService {
                 .recordCheckoutConfirmation(confirmation);
 
         if (!confirmationRecorded) {
-            return null;
+            throw new CheckoutException("Checkout failed: could not save checkout confirmation.");
         }
 
         cart.clearCart();

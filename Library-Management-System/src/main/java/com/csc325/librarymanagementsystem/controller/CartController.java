@@ -1,6 +1,7 @@
 package com.csc325.librarymanagementsystem.controller;
 
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
+import com.csc325.librarymanagementsystem.exception.CheckoutException;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
 import com.csc325.librarymanagementsystem.service.CartService;
@@ -18,9 +19,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class CartController {
 
@@ -157,10 +155,6 @@ public class CartController {
                     Session.getCart()
             );
 
-            if (confirmation == null) {
-                throw new Exception("Checkout failed.");
-            }
-
             refreshCart();
 
             messageLabel.setText(
@@ -168,10 +162,13 @@ public class CartController {
                             + confirmation.getConfirmationNumber()
             );
 
+        } catch (CheckoutException e) {
+
+            messageLabel.setText(e.getMessage());
+
         } catch (Exception e) {
 
-            messageLabel.setText("Checkout failed.");
-
+            messageLabel.setText("Checkout failed. Please try again.");
             e.printStackTrace();
         }
     }
