@@ -13,12 +13,12 @@ import com.csc325.librarymanagementsystem.data.LoanContext;
 import com.csc325.librarymanagementsystem.data.FirebaseInitializer;
 
 public class ProfileController {
-    @FXML
-    private Button homeButton;
+    @FXML private Button homeButton;
     @FXML private Button searchButton;
     @FXML private Button signOutButton;
     @FXML private Button loansButton;
     @FXML private Button cartButton;
+    @FXML private Button notificationButton;
     @FXML private Label welcomeLabel;
     @FXML private Label profileInitialLabel;
     @FXML private Label userEmail;
@@ -66,6 +66,11 @@ public class ProfileController {
     @FXML
     private void onCartClicked(){
         navigateTo("/com/csc325/librarymanagementsystem/CartScreen.fxml", cartButton);
+    }
+
+    @FXML
+    private void onNotificationClicked() {
+        navigateTo("/com/csc325/librarymanagementsystem/NotificationScreen.fxml", notificationButton);
     }
 
     private void navigateTo(String fxmlPath, Button source) {

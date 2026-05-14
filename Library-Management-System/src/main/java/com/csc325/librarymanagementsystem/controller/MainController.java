@@ -103,7 +103,6 @@ public class MainController {
 
     @FXML
     private void onCheckoutClicked() {
-        // main: navegacion a CheckoutScreen
         navigateTo("/com/csc325/librarymanagementsystem/CheckoutScreen.fxml", checkoutButton);
     }
 
@@ -116,6 +115,10 @@ public class MainController {
     private void onSignOutClicked() {
         Session.clear();
         navigateTo("/com/csc325/librarymanagementsystem/LoginScreen.fxml", signOutButton);
+    }
+    @FXML
+    private void onNotificationClicked(){
+        navigateTo("/com/csc325/librarymanagementsystem/NotificationScreen.fxml", notificationButton);
     }
 
     private void navigateTo(String fxmlPath, Button source) {

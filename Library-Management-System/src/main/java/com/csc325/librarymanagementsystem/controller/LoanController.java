@@ -15,20 +15,14 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class LoanController {
-    @FXML
-    private Button homeButton;
-    @FXML
-    private Button searchButton;
-    @FXML
-    private Button cartButton;
-    @FXML
-    private Button signOutButton;
-    @FXML
-    private Label welcomeLabel;
-    @FXML
-    private Label loanCounterLabel;
-    @FXML
-    private ListView<Loan> loanListView;
+    @FXML private Button homeButton;
+    @FXML private Button searchButton;
+    @FXML private Button cartButton;
+    @FXML private Button signOutButton;
+    @FXML private Button notificationButton;
+    @FXML private Label welcomeLabel;
+    @FXML private Label loanCounterLabel;
+    @FXML private ListView<Loan> loanListView;
 
     private FirebaseContext firebase;
 
@@ -88,8 +82,14 @@ public class LoanController {
         navigateTo("/com/csc325/librarymanagementsystem/LoginScreen.fxml", signOutButton);
     }
 
-    @FXML private void onProfileClicked()  {
+    @FXML
+    private void onProfileClicked()  {
         navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
+    }
+
+    @FXML
+    private void onNotificationClicked(){
+        navigateTo("/com/csc325/librarymanagementsystem/NotificationScreen.fxml", notificationButton);
     }
 
     private void navigateTo(String fxmlPath, Button source){

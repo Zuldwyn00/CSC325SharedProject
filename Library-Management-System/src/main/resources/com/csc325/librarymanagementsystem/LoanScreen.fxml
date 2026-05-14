@@ -22,7 +22,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <Label fx:id="welcomeLabel" styleClass="top-subtitle" text="Welcome" />
                         <Region prefWidth="16.0" />
-                        <Button fx:id="notificationButton" mnemonicParsing="false" prefHeight="55.0" prefWidth="86.0" styleClass="top-button" text="Notifications" />
+                        <Button fx:id="notificationButton" mnemonicParsing="false" onAction="#onNotificationClicked" prefHeight="55.0" prefWidth="86.0" styleClass="top-button" text="Notifications" />
                         <Region prefWidth="8.0" />
                     </children>
                 </HBox>
