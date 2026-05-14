@@ -114,16 +114,11 @@ public class MainController {
             return;
         }
 
-        String mostPopularBookId = Collections.max(
-                bookIdCounts.entrySet(),
-                Map.Entry.comparingByValue()
-        ).getKey();
-
         Book bookOfMonth = firebaseContext.getBookById(mostPopularBookId);
 
-
+        // check if book itself is null first so we dont try and set null values for the title, author, and genre
         if (bookOfMonth == null) {
-            setNoImagePlaceholder(bookOfTheDayImage);
+            setNoImagePlaceholder(bookOfTheMonthImage);
             return;
         }
 
@@ -136,7 +131,8 @@ public class MainController {
             return;
         }
 
-        String imageUrl = bookOfMonth.getCoverImageUrl();
+        try {
+            String imageUrl = bookOfMonth.getCoverImageUrl();
 
             Image urlImage = new Image(imageUrl);
             if (urlImage.isError()) {
