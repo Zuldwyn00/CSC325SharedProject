@@ -1,5 +1,7 @@
 package com.csc325.librarymanagementsystem.controller;
 
+import com.csc325.librarymanagementsystem.data.FirebaseContext;
+import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.service.Session;
 import java.net.URL;
 import javafx.fxml.FXML;
@@ -14,6 +16,7 @@ import javafx.stage.Stage;
 
 public class MainController {
     private static final String NO_IMAGE_RESOURCE = "/com/csc325/librarymanagementsystem/images/no-image.png";
+    private final FirebaseContext firebaseContext = new FirebaseContext();
 
     @FXML private Button searchButton;
     @FXML private Button cartButton;
@@ -27,25 +30,40 @@ public class MainController {
     @FXML private Label bookOfDayTitle;
     @FXML private Label bookOfDayAuthor;
     @FXML private Label bookOfDayGenre;
-    @FXML private Label authorOfTheMonthTitle;
-    @FXML private Label authorOfTheMonthAuthor;
-    @FXML private Label authorOfTheMonthGenre;
+    @FXML private Label bookOfTheMonthTitle;
+    @FXML private Label bookOfTheMonthAuthor;
+    @FXML private Label bookOfTheMonthGenre;
     @FXML private ImageView bookOfTheDayImage;
-    @FXML private ImageView authorOfTheMonthImage;
+    @FXML private ImageView bookOfTheMonthImage;
 
     @FXML
     private void initialize() {
         welcomeLabel.setText("Welcome, " + Session.getCurrentUser().getEmail());
-        loadBookOfTheDayImage();
-        loadAuthorOfTheMonthImage();
+        loadBookOfTheDay();
+        loadBookOfTheMonthImage();
     }
 
-    private void loadBookOfTheDayImage() {
-        String imageUrl = "";
-        if (imageUrl == null || imageUrl.isBlank()) {
+    private void loadBookOfTheDay() {
+        int bookCollectionSize = firebaseContext.getCollectionSize(FirebaseContext.BOOKS_COLLECTION);
+        int positionInCollection = (int) (Math.random() * (bookCollectionSize));
+        Book bookOfDay = firebaseContext.getBookAt(positionInCollection);
+
+        if (bookOfDay == null) {
             setNoImagePlaceholder(bookOfTheDayImage);
             return;
         }
+
+        bookOfDayTitle.setText(bookOfDay.getTitle());
+        bookOfDayAuthor.setText("Authors: " + bookOfDay.getAuthors());
+        bookOfDayGenre.setText("Genres: " + bookOfDay.getGenres());
+
+        if (bookOfDay.getCoverImageUrl() == null || bookOfDay.getCoverImageUrl().isBlank()) {
+            setNoImagePlaceholder(bookOfTheDayImage);
+            return;
+        }
+
+        String imageUrl = bookOfDay.getCoverImageUrl();
+
         try {
             Image urlImage = new Image(imageUrl);
             if (urlImage.isError()) {
@@ -58,21 +76,23 @@ public class MainController {
         }
     }
 
-    private void loadAuthorOfTheMonthImage() {
+    private void loadBookOfTheMonthImage() {
         String imageUrl = "";
+
+        
         if (imageUrl == null || imageUrl.isBlank()) {
-            setNoImagePlaceholder(authorOfTheMonthImage);
+            setNoImagePlaceholder(bookOfTheMonthImage);
             return;
         }
         try {
             Image urlImage = new Image(imageUrl);
             if (urlImage.isError()) {
-                setNoImagePlaceholder(authorOfTheMonthImage);
+                setNoImagePlaceholder(bookOfTheMonthImage);
             } else {
-                authorOfTheMonthImage.setImage(urlImage);
+                bookOfTheMonthImage.setImage(urlImage);
             }
         } catch (IllegalArgumentException e) {
-            setNoImagePlaceholder(authorOfTheMonthImage);
+            setNoImagePlaceholder(bookOfTheMonthImage);
         }
     }
 

@@ -2,31 +2,22 @@ package com.csc325.librarymanagementsystem.data;
 
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.FieldValue;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import com.csc325.librarymanagementsystem.data.FakeData;
-import com.csc325.librarymanagementsystem.model.User;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.model.Loan;
 
 public class FirebaseContext {
-    private final String BOOKS_COLLECTION = "books";
+    public static final String BOOKS_COLLECTION = "books";
     private final Firestore db; //static so that FirebaseContext always uses the same db rather than per-class instantiation
 
     private final LoanContext loans;
     private final CheckoutContext checkouts;
-
-    // Fake data, remove later
-    private final List<User> users = new ArrayList<>(FakeData.getUsers());
+    private final UserContext users;
 
     public List<Book> getAllBooks() {
         List<Book> bookList = new ArrayList<>();
@@ -50,7 +41,8 @@ public class FirebaseContext {
         if (bookId == null || bookId.isBlank()) {return null;}
 
         try {
-            DocumentSnapshot document = db.collection(BOOKS_COLLECTION).document(bookId).get().get();
+            ApiFuture<DocumentSnapshot> query = db.collection(BOOKS_COLLECTION).document(bookId).get();
+            DocumentSnapshot document = query.get();
             if (!document.exists()) {
                 return null;
             }
@@ -140,34 +132,56 @@ public class FirebaseContext {
         return adjustStock(loan.getBookId(), 1); // adjust stock of book +1
     }
 
-    public User findUserByIdentifier(String identifier) {
-        if (identifier == null) {return null;}
+    public Book getBookAt(int n) {
+        // this method sorts the collection by the document id, which means the sorting will be unexpected and not actually reflect the order you see them in firestore. This works for now
+        // since this is only used for one purpose, but this needs to be changed later if it becomes something that needs to be used more accurately to the firestore itself.
+        if (n < 0) {return null;}
 
-        for (User user: users) {
-            if (identifier.equals(user.getLibraryId())
-                || identifier.equals(user.getEmail()))
-            {return user;}
+        try {
+            ApiFuture<QuerySnapshot> query = db.collection(BOOKS_COLLECTION)
+                    .orderBy(FieldPath.documentId()) // sort the collection by documentId since firebase doesnt actually use index positions.
+                    .offset(n)
+                    .limit(1)
+                    .get();
+            List<QueryDocumentSnapshot> documents = query.get().getDocuments();
+            if (documents.isEmpty()) {
+                return null; // n was out of range
+            }
+
+            QueryDocumentSnapshot document = documents.get(0);
+            Book book = document.toObject(Book.class);
+            book.setBookId(document.getId()); // firestore document id is the book id but doesnt actually set the bookId field, so must set manually
+            return book;
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error retrieving book at index " + n + ": " + e.getMessage());
         }
         return null;
     }
 
-    public User findUserByUserID(String id) {
-        if (id == null) {return null;}
+    public int getCollectionSize(String collectionId) {
+        if (collectionId == null || collectionId.isBlank()) {return 0;}
 
-        for (User user: users) {
-            if (id.equals(user.getUserId())) {return user;}
+        try {
+            CollectionReference collection = db.collection(collectionId);
+            AggregateQuerySnapshot countSnapshot = collection.count().get().get();
+            return (int) countSnapshot.getCount(); //getCount returns a long, casting as int
+        } catch (ExecutionException | InterruptedException e) {
+            System.err.println("Error getting collection size " + collectionId + ": " + e.getMessage());
         }
-        return null;
+        return 0;
     }
 
     public LoanContext loans() { return loans;}
 
     public CheckoutContext checkouts() { return checkouts; }
 
+    public UserContext users() { return users; }
+
     public FirebaseContext() {
         this.db = FirebaseInitializer.getFirestore();
         this.loans = new LoanContext(db);
         this.checkouts = new CheckoutContext(db);
+        this.users = new UserContext(db);
     }
 
 
