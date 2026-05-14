@@ -231,14 +231,22 @@ public class SearchController {
         navigateTo("/com/csc325/librarymanagementsystem/CartScreen.fxml", cartButton);
     }
 
-    @FXML private void onLoansClicked()    { System.out.println("Loans clicked"); }
-    @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
+    @FXML
+    private void onLoansClicked() {
+        // UI-LoansScreen: tu navegacion a LoanScreen
+        navigateTo("/com/csc325/librarymanagementsystem/LoanScreen.fxml", loansButton);
+    }
+    @FXML private void onProfileClicked()  {
+        navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
+    }
     @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
 
     @FXML
     private void onSignOutClicked() {
         navigateTo("/com/csc325/librarymanagementsystem/LoginScreen.fxml", signOutButton);
     }
+
+
 
 
     private void navigateTo(String fxmlPath, Button source) {

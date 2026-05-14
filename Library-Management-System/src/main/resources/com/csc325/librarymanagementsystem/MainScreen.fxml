@@ -219,7 +219,7 @@
 
                                     <children>
 
-                                        <Label text="Author of The Month"
+                                        <Label text="Book of The Month"
                                                styleClass="feature-image-title" />
 
                                         <StackPane alignment="CENTER"
@@ -228,7 +228,7 @@
                                                    styleClass="feature-image-frame"
                                                    VBox.vgrow="ALWAYS">
                                             <children>
-                                                <ImageView fx:id="authorOfTheMonthImage"
+                                                <ImageView fx:id="bookOfTheMonthImage"
                                                            fitHeight="320.0"
                                                            fitWidth="320.0"
                                                            preserveRatio="true"
@@ -239,17 +239,17 @@
                                         <VBox alignment="CENTER"
                                               spacing="6.0">
                                             <children>
-                                                <Label fx:id="authorOfTheMonthTitle"
+                                                <Label fx:id="bookOfTheMonthTitle"
                                                        text="Book Title"
                                                        wrapText="true"
                                                        styleClass="card-title" />
 
-                                                <Label fx:id="authorOfTheMonthAuthor"
+                                                <Label fx:id="bookOfTheMonthAuthor"
                                                        text="Author Name"
                                                        wrapText="true"
                                                        styleClass="page-subtitle" />
 
-                                                <Label fx:id="authorOfTheMonthGenre"
+                                                <Label fx:id="bookOfTheMonthGenre"
                                                        text="Genre"
                                                        wrapText="true"
                                                        styleClass="small-muted" />

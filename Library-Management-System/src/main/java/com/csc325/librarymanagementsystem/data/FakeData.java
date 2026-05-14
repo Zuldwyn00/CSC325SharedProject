@@ -10,18 +10,7 @@ import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
 import com.csc325.librarymanagementsystem.model.Loan;
 import com.csc325.librarymanagementsystem.model.User;
 
-/**
- * Sample books, users, and loans for testing without Firebase.
- *-
- * These methods create fresh sample objects each time they are called, but
- * the returned lists are read-only. If a test needs to add, remove, or update
- * data, first copy the list into an ArrayList and change the copy.
- *-
- * Example:
- *     List<Book> books = new ArrayList<>(FakeData.getBooks());
- *     List<Loan> loans = new ArrayList<>(FakeData.getLoans());
- *     // Change books and loans here for the specific test case.
- */
+
 public final class FakeData {
 
     private FakeData() {

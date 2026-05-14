@@ -1,5 +1,7 @@
 package com.csc325.librarymanagementsystem.controller;
 
+import com.csc325.librarymanagementsystem.data.FirebaseContext;
+import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.service.Session;
 import java.net.URL;
 import javafx.fxml.FXML;
@@ -14,6 +16,7 @@ import javafx.stage.Stage;
 
 public class MainController {
     private static final String NO_IMAGE_RESOURCE = "/com/csc325/librarymanagementsystem/images/no-image.png";
+    private final FirebaseContext firebaseContext = new FirebaseContext();
 
     @FXML private Button searchButton;
     @FXML private Button cartButton;
@@ -27,31 +30,43 @@ public class MainController {
     @FXML private Label bookOfDayTitle;
     @FXML private Label bookOfDayAuthor;
     @FXML private Label bookOfDayGenre;
-    @FXML private Label authorOfTheMonthTitle;
-    @FXML private Label authorOfTheMonthAuthor;
-    @FXML private Label authorOfTheMonthGenre;
+    @FXML private Label bookOfTheMonthTitle;
+    @FXML private Label bookOfTheMonthAuthor;
+    @FXML private Label bookOfTheMonthGenre;
     @FXML private ImageView bookOfTheDayImage;
-    @FXML private ImageView authorOfTheMonthImage;
+    @FXML private ImageView bookOfTheMonthImage;
 
     @FXML
     private void initialize() {
         welcomeLabel.setText("Welcome, " + Session.getCurrentUser().getEmail());
-        loadBookOfTheDayImage();
-        loadAuthorOfTheMonthImage();
+        loadBookOfTheDay();
+        loadBookOfTheMonthImage();
     }
 
-    private void loadBookOfTheDayImage() {
-        String imageUrl = "";
+    private void loadBookOfTheDay() {
+        int bookCollectionSize = firebaseContext.getCollectionSize(FirebaseContext.BOOKS_COLLECTION);
+        int positionInCollection = (int) (Math.random() * (bookCollectionSize));
+        Book bookOfDay = firebaseContext.getBookAt(positionInCollection);
 
-        if (imageUrl == null || imageUrl.isBlank()) {
+        if (bookOfDay == null) {
             setNoImagePlaceholder(bookOfTheDayImage);
             return;
         }
 
+        bookOfDayTitle.setText(bookOfDay.getTitle());
+        bookOfDayAuthor.setText("Authors: " + bookOfDay.getAuthors());
+        bookOfDayGenre.setText("Genres: " + bookOfDay.getGenres());
+
+        if (bookOfDay.getCoverImageUrl() == null || bookOfDay.getCoverImageUrl().isBlank()) {
+            setNoImagePlaceholder(bookOfTheDayImage);
+            return;
+        }
+
+        String imageUrl = bookOfDay.getCoverImageUrl();
+
         try {
             Image urlImage = new Image(imageUrl);
-
-            if (urlImage.isError()) { // URL import allows us to easily check if an image URL failed or load or not without having to write some complex custom logic.
+            if (urlImage.isError()) {
                 setNoImagePlaceholder(bookOfTheDayImage);
             } else {
                 bookOfTheDayImage.setImage(urlImage);
@@ -61,35 +76,32 @@ public class MainController {
         }
     }
 
-    private void loadAuthorOfTheMonthImage() {
+    private void loadBookOfTheMonthImage() {
         String imageUrl = "";
 
+        
         if (imageUrl == null || imageUrl.isBlank()) {
-            setNoImagePlaceholder(authorOfTheMonthImage);
+            setNoImagePlaceholder(bookOfTheMonthImage);
             return;
         }
-
         try {
             Image urlImage = new Image(imageUrl);
-
             if (urlImage.isError()) {
-                setNoImagePlaceholder(authorOfTheMonthImage);
+                setNoImagePlaceholder(bookOfTheMonthImage);
             } else {
-                authorOfTheMonthImage.setImage(urlImage);
+                bookOfTheMonthImage.setImage(urlImage);
             }
         } catch (IllegalArgumentException e) {
-            setNoImagePlaceholder(authorOfTheMonthImage);
+            setNoImagePlaceholder(bookOfTheMonthImage);
         }
     }
 
     private void setNoImagePlaceholder(ImageView imageView) {
         URL noImageResource = getClass().getResource(NO_IMAGE_RESOURCE);
-
         if (noImageResource == null) {
             imageView.setImage(null);
             return;
         }
-
         imageView.setImage(new Image(noImageResource.toExternalForm()));
     }
 
@@ -99,16 +111,25 @@ public class MainController {
     }
 
     @FXML
-    private void onCartClicked(){
+    private void onCartClicked() {
         navigateTo("/com/csc325/librarymanagementsystem/CartScreen.fxml", cartButton);
-
     }
-    @FXML private void onLoansClicked()    { System.out.println("Loans clicked"); }
+
+    @FXML
+    private void onLoansClicked() {
+        // UI-LoansScreen: tu navegacion a LoanScreen
+        navigateTo("/com/csc325/librarymanagementsystem/LoanScreen.fxml", loansButton);
+    }
+
     @FXML
     private void onCheckoutClicked() {
+        // main: navegacion a CheckoutScreen
         navigateTo("/com/csc325/librarymanagementsystem/CheckoutScreen.fxml", checkoutButton);
     }
-    @FXML private void onProfileClicked()  { System.out.println("Profile clicked"); }
+
+    @FXML private void onProfileClicked()  {
+        navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
+    }
     @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
 
     @FXML
@@ -121,19 +142,11 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
-
             Stage stage = (Stage) source.getScene().getWindow();
             Scene currentScene = source.getScene();
-
-            Scene newScene = new Scene(
-                    root,
-                    currentScene.getWidth(),
-                    currentScene.getHeight()
-            );
-
+            Scene newScene = new Scene(root, currentScene.getWidth(), currentScene.getHeight());
             stage.setScene(newScene);
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
