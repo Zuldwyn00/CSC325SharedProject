@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class LoanContext {
-    private final String LOANS_COLLECTION = "loans";
+    public static final String LOANS_COLLECTION = "loans";
     private final Firestore firestore;
 
     public LoanContext(Firestore firestore) {
