@@ -20,7 +20,7 @@ public class UserContext {
         this.firestore = firestore;
     }
 
-    // Add a user to firestore - If userId is null/blank, firestore generates one and it is set in the in-memory object so it can still be used downstream
+    //IMPORTANT: If userId && libaryId is null/blank, firestore generates one, and it is set in the in-memory object so it can still be used downstream
     public boolean recordUser(User user) {
         if (user == null) {
             throw new IllegalArgumentException("user cannot be null.");
