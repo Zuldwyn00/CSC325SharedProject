@@ -57,9 +57,7 @@ public class LoanContext {
                     .get();
 
             for (QueryDocumentSnapshot document : query.get().getDocuments()) {
-                Loan loan = document.toObject(Loan.class);
-                loan.setLoanId(document.getId()); // defensive: stamp doc id in case it wasn't persisted as a field
-                activeLoans.add(loan);
+                activeLoans.add(document.toObject(Loan.class));
             }
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error retrieving active loans for " + userId + ": " + e.getMessage());
@@ -78,9 +76,7 @@ public class LoanContext {
                     .get();
 
             for (QueryDocumentSnapshot document : query.get().getDocuments()) {
-                Loan loan = document.toObject(Loan.class);
-                loan.setLoanId(document.getId());
-                userLoans.add(loan);
+                userLoans.add(document.toObject(Loan.class));
             }
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error retrieving loans for " + userId + ": " + e.getMessage());
@@ -122,9 +118,7 @@ public class LoanContext {
                     .get();
 
             for (QueryDocumentSnapshot document : query.get().getDocuments()) {
-                Loan loan = document.toObject(Loan.class);
-                loan.setLoanId(document.getId());
-                dueSoon.add(loan);
+                dueSoon.add(document.toObject(Loan.class));
             }
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error retrieving due-soon loans (" + daysAhead + " days): " + e.getMessage());
@@ -153,9 +147,7 @@ public class LoanContext {
                     .get();
 
             for (QueryDocumentSnapshot document : query.get().getDocuments()) {
-                Loan loan = document.toObject(Loan.class);
-                loan.setLoanId(document.getId());
-                dueSoon.add(loan);
+                dueSoon.add(document.toObject(Loan.class));
             }
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error retrieving due-soon loans for " + userId
@@ -176,9 +168,7 @@ public class LoanContext {
                     .get();
 
             for (QueryDocumentSnapshot document : query.get().getDocuments()) {
-                Loan loan = document.toObject(Loan.class);
-                loan.setLoanId(document.getId());
-                overdue.add(loan);
+                overdue.add(document.toObject(Loan.class));
             }
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error retrieving overdue loans: " + e.getMessage());
@@ -201,9 +191,7 @@ public class LoanContext {
                     .get();
 
             for (QueryDocumentSnapshot document : query.get().getDocuments()) {
-                Loan loan = document.toObject(Loan.class);
-                loan.setLoanId(document.getId());
-                overdue.add(loan);
+                overdue.add(document.toObject(Loan.class));
             }
         } catch (InterruptedException | ExecutionException e) {
             System.err.println("Error retrieving overdue loans for " + userId + ": " + e.getMessage());
@@ -220,10 +208,7 @@ public class LoanContext {
                 return null;
             }
 
-            Loan loan = document.toObject(Loan.class);
-            assert loan != null;
-            loan.setLoanId(document.getId());
-            return loan;
+            return document.toObject(Loan.class);
         } catch (ExecutionException | InterruptedException e) {
             System.err.println("Error retrieving loan " + loanId + ": " + e.getMessage());
         }
