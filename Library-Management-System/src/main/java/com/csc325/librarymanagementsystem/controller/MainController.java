@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,7 +24,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class MainController {
-    private static final String NO_IMAGE_RESOURCE = "/com/csc325/librarymanagementsystem/images/no-image.png";
+    private final Image defaultBookImage =
+            new Image(getClass().getResourceAsStream("/com/csc325/librarymanagementsystem/images/no-image.png"));
     private final FirebaseContext firebaseContext = new FirebaseContext();
 
     @FXML private Button searchButton;
@@ -42,15 +45,62 @@ public class MainController {
     @FXML private Label bookOfTheMonthGenre;
     @FXML private ImageView bookOfTheDayImage;
     @FXML private ImageView bookOfTheMonthImage;
+    private final java.util.Map<String, Image> imageCache = new java.util.HashMap<>();
 
     @FXML
     private void initialize() {
         welcomeLabel.setText("Welcome, " + Session.getCurrentUser().getEmail());
-        loadBookOfTheDay();
-        loadBookOfTheMonthImage();
+        ImageView bookOfTheDayImage1 = bookOfTheDayImage;
+        ImageView bookOfTheMonthImage1 = bookOfTheMonthImage;
+        bookOfTheDayImage1.setImage(defaultBookImage);
+        bookOfTheMonthImage1.setImage(defaultBookImage);
+
+        //this task makes it load in the background and changes it whenenver it gets the books
+        Task<Book[]> loadTask = new Task<>() {
+            @Override
+            protected Book[] call() {
+                Book dayBook = getBookOfTheDay();
+                Book monthBook = getBookOfTheMonth();
+                return new Book[]{dayBook, monthBook};
+            }
+        };
+
+        loadTask.setOnSucceeded(e -> {
+
+
+            //calls the task so whenever images and data is ready they are placed into this array
+            Book[] books = loadTask.getValue();
+
+            Book bookOfDay = books[0];
+            Book bookOfMonth = books[1];
+
+            if (bookOfDay != null) {
+
+                bookOfDayTitle.setText(bookOfDay.getTitle());
+
+                loadCoverImageOrPlaceholder(
+                        bookOfTheDayImage,
+                        bookOfDay.getCoverImageUrl()
+                );
+            }
+
+            if (bookOfMonth != null) {
+
+                bookOfTheMonthTitle.setText(bookOfMonth.getTitle());
+                loadCoverImageOrPlaceholder(
+                        bookOfTheMonthImage,
+                        bookOfMonth.getCoverImageUrl()
+                );
+            }
+        });
+
+        new Thread(loadTask).start();
+
+        //actually starts the task
+        new Thread(loadTask).start();
     }
 
-    private void loadBookOfTheDay() {
+   /* private void loadBookOfTheDay() {
         int bookCollectionSize = firebaseContext.getCollectionSize(FirebaseContext.BOOKS_COLLECTION);
         int positionInCollection = (int) (Math.random() * (bookCollectionSize));
         Book bookOfDay = firebaseContext.getBookAt(positionInCollection);
@@ -61,13 +111,25 @@ public class MainController {
         }
 
         bookOfDayTitle.setText(bookOfDay.getTitle());
-        bookOfDayAuthor.setText("Authors: " + bookOfDay.getAuthors());
-        bookOfDayGenre.setText("Genres: " + bookOfDay.getGenres());
+
 
         loadCoverImageOrPlaceholder(bookOfTheDayImage, bookOfDay.getCoverImageUrl());
     }
+*/
 
-    private void loadBookOfTheMonthImage() {
+    //if these get methods arent to your liking let me know
+    private Book getBookOfTheDay() {
+
+        int bookCollectionSize =
+                firebaseContext.getCollectionSize(FirebaseContext.BOOKS_COLLECTION);
+
+        int positionInCollection =
+                (int) (Math.random() * (bookCollectionSize));
+
+        return firebaseContext.getBookAt(positionInCollection);
+    }
+
+    /*private void loadBookOfTheMonthImage() {
         Date currentDate = new Date(); // todays date
         Calendar oneMonthBeforeCurrentCalendar = Calendar.getInstance();
         oneMonthBeforeCurrentCalendar.setTime(currentDate);
@@ -116,26 +178,84 @@ public class MainController {
 
         loadCoverImageOrPlaceholder(bookOfTheMonthImage, bookOfMonth.getCoverImageUrl());
     }
+*/
+    private Book getBookOfTheMonth() {
 
+        Date currentDate = new Date();
+
+        Calendar oneMonthBeforeCurrentCalendar = Calendar.getInstance();
+        oneMonthBeforeCurrentCalendar.setTime(currentDate);
+        oneMonthBeforeCurrentCalendar.add(Calendar.MONTH, -1);
+
+        Date oneMonthBeforeCurrentDate =
+                oneMonthBeforeCurrentCalendar.getTime();
+
+        List<CheckoutConfirmation> checkoutsPastMonth =
+                firebaseContext.checkouts()
+                        .getCheckoutConfirmationsBetween(
+                                oneMonthBeforeCurrentDate,
+                                currentDate
+                        );
+
+        Map<String, Integer> bookIdCounts = new HashMap<>();
+
+        for (CheckoutConfirmation checkout : checkoutsPastMonth) {
+
+            for (String bookId : checkout.getBookIds()) {
+
+                if (!bookIdCounts.containsKey(bookId)) {
+                    bookIdCounts.put(bookId, 0);
+                }
+
+                bookIdCounts.put(
+                        bookId,
+                        bookIdCounts.get(bookId) + 1
+                );
+            }
+        }
+
+        if (bookIdCounts.isEmpty()) {
+            return null;
+        }
+
+        String mostPopularBookId =
+                bookIdCounts.entrySet()
+                        .stream()
+                        .max(Map.Entry.comparingByValue())
+                        .map(Map.Entry::getKey)
+                        .orElse(null);
+
+        return firebaseContext.getBookById(mostPopularBookId);
+    }
     private void loadCoverImageOrPlaceholder(ImageView imageView, String imageUrl) {
+        imageView.setImage(defaultBookImage);
+
         if (imageUrl == null || imageUrl.isBlank()) {
-            setNoImagePlaceholder(imageView);
+            imageView.setImage(defaultBookImage);
             return;
         }
-        try {
-            Image image = new Image(imageUrl);
-            if (image.isError()) {
-                setNoImagePlaceholder(imageView);
-            } else {
-                imageView.setImage(image);
-            }
-        } catch (IllegalArgumentException e) {
-            setNoImagePlaceholder(imageView);
+
+        if (imageCache.containsKey(imageUrl)) {
+            imageView.setImage(imageCache.get(imageUrl));
+            return;
         }
+
+        Image image = new Image(imageUrl, true);
+
+        image.progressProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.doubleValue() >= 1.0) {
+                if (!image.isError()) {
+                    imageCache.put(imageUrl, image);
+                    imageView.setImage(image);
+                } else {
+                    imageView.setImage(defaultBookImage);
+                }
+            }
+        });
     }
 
     private void setNoImagePlaceholder(ImageView imageView) {
-        URL noImageResource = getClass().getResource(NO_IMAGE_RESOURCE);
+        URL noImageResource = getClass().getResource("/com/csc325/librarymanagementsystem/images/noimage.png");
         if (noImageResource == null) {
             imageView.setImage(null);
             return;
