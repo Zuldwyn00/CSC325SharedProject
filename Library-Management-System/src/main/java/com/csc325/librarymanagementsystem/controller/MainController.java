@@ -64,23 +64,7 @@ public class MainController {
         bookOfDayAuthor.setText("Authors: " + bookOfDay.getAuthors());
         bookOfDayGenre.setText("Genres: " + bookOfDay.getGenres());
 
-        if (bookOfDay.getCoverImageUrl() == null || bookOfDay.getCoverImageUrl().isBlank()) {
-            setNoImagePlaceholder(bookOfTheDayImage);
-            return;
-        }
-
-        String imageUrl = bookOfDay.getCoverImageUrl();
-
-        try {
-            Image urlImage = new Image(imageUrl);
-            if (urlImage.isError()) {
-                setNoImagePlaceholder(bookOfTheDayImage);
-            } else {
-                bookOfTheDayImage.setImage(urlImage);
-            }
-        } catch (IllegalArgumentException e) {
-            setNoImagePlaceholder(bookOfTheDayImage);
-        }
+        loadCoverImageOrPlaceholder(bookOfTheDayImage, bookOfDay.getCoverImageUrl());
     }
 
     private void loadBookOfTheMonthImage() {
@@ -90,9 +74,12 @@ public class MainController {
         oneMonthBeforeCurrentCalendar.add(Calendar.MONTH, -1);
         Date oneMonthBeforeCurrentDate = oneMonthBeforeCurrentCalendar.getTime(); // date one month before today
 
+
         List<CheckoutConfirmation> checkoutsPastMonth = firebaseContext.checkouts()
                 .getCheckoutConfirmationsBetween(oneMonthBeforeCurrentDate, currentDate);
 
+
+        // using the list of the past months checkoutconfirmations, count how many times each unique bookId is present within each
         Map<String, Integer> bookIdCounts = new HashMap<>();
         for (CheckoutConfirmation checkout : checkoutsPastMonth) {
             List<String> bookIds = checkout.getBookIds();
@@ -104,6 +91,7 @@ public class MainController {
             }
         }
 
+        // Get the highest count bookId from the (bookId, foundCount) key,value HashMap loop above.
         String mostPopularBookId = bookIdCounts.entrySet()
                                                .stream()
                                                .max(Map.Entry.comparingByValue()) //compare all key - values with eachother and get max
@@ -126,22 +114,23 @@ public class MainController {
         bookOfTheMonthAuthor.setText("Authors: " + bookOfMonth.getAuthors());
         bookOfTheMonthGenre.setText("Genres: " + bookOfMonth.getGenres());
 
-        if (bookOfMonth.getCoverImageUrl() == null || bookOfMonth.getCoverImageUrl().isBlank()) {
-            setNoImagePlaceholder(bookOfTheMonthImage);
+        loadCoverImageOrPlaceholder(bookOfTheMonthImage, bookOfMonth.getCoverImageUrl());
+    }
+
+    private void loadCoverImageOrPlaceholder(ImageView imageView, String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            setNoImagePlaceholder(imageView);
             return;
         }
-
         try {
-            String imageUrl = bookOfMonth.getCoverImageUrl();
-
-            Image urlImage = new Image(imageUrl);
-            if (urlImage.isError()) {
-                setNoImagePlaceholder(bookOfTheMonthImage);
+            Image image = new Image(imageUrl);
+            if (image.isError()) {
+                setNoImagePlaceholder(imageView);
             } else {
-                bookOfTheMonthImage.setImage(urlImage);
+                imageView.setImage(image);
             }
         } catch (IllegalArgumentException e) {
-            setNoImagePlaceholder(bookOfTheMonthImage);
+            setNoImagePlaceholder(imageView);
         }
     }
 
