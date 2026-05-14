@@ -1,9 +1,9 @@
 package com.csc325.librarymanagementsystem.service;
 
 import com.csc325.librarymanagementsystem.data.FakeData;
+import com.csc325.librarymanagementsystem.exception.CheckoutException;
 import com.csc325.librarymanagementsystem.model.Book;
 import com.csc325.librarymanagementsystem.model.Cart;
-import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
 import com.csc325.librarymanagementsystem.model.User;
 import org.junit.jupiter.api.Test;
 
@@ -131,13 +131,16 @@ class CartServiceTest {
     }
 
     @Test
-    void checkoutShouldReturnNullForEmptyCart() {
+    void checkoutShouldThrowExceptionForEmptyCart() {
         User user = getTestUser();
         Cart cart = new Cart();
 
-        CheckoutConfirmation confirmation = cartService.checkout(user, cart);
+        CheckoutException exception = assertThrows(
+                CheckoutException.class,
+                () -> cartService.checkout(user, cart)
+        );
 
-        assertNull(confirmation);
+        assertEquals("Checkout failed: your cart is empty.", exception.getMessage());
     }
 
 }
