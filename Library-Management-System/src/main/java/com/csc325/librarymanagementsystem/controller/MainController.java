@@ -2,8 +2,15 @@ package com.csc325.librarymanagementsystem.controller;
 
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Book;
+import com.csc325.librarymanagementsystem.model.CheckoutConfirmation;
 import com.csc325.librarymanagementsystem.service.Session;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -77,14 +84,60 @@ public class MainController {
     }
 
     private void loadBookOfTheMonthImage() {
-        String imageUrl = "";
+        Date currentDate = new Date(); // todays date
+        Calendar oneMonthBeforeCurrentCalendar = Calendar.getInstance();
+        oneMonthBeforeCurrentCalendar.setTime(currentDate);
+        oneMonthBeforeCurrentCalendar.add(Calendar.MONTH, -1);
+        Date oneMonthBeforeCurrentDate = oneMonthBeforeCurrentCalendar.getTime(); // date one month before today
 
-        
-        if (imageUrl == null || imageUrl.isBlank()) {
+        List<CheckoutConfirmation> checkoutsPastMonth = firebaseContext.checkouts()
+                .getCheckoutConfirmationsBetween(oneMonthBeforeCurrentDate, currentDate);
+
+        Map<String, Integer> bookIdCounts = new HashMap<>();
+        for (CheckoutConfirmation checkout : checkoutsPastMonth) {
+            List<String> bookIds = checkout.getBookIds();
+            for (String bookId : bookIds) {
+                if (!bookIdCounts.containsKey(bookId)) {
+                    bookIdCounts.put(bookId, 0);
+                }
+                bookIdCounts.put(bookId, bookIdCounts.get(bookId) + 1);
+            }
+        }
+
+        String mostPopularBookId = bookIdCounts.entrySet()
+                                               .stream()
+                                               .max(Map.Entry.comparingByValue()) //compare all key - values with eachother and get max
+                                               .map(Map.Entry::getKey) // same as a lambda doing "entry -> entry.getKey()"
+                                               .orElse(null);
+        if (bookIdCounts.isEmpty()) {
             setNoImagePlaceholder(bookOfTheMonthImage);
             return;
         }
-        try {
+
+        String mostPopularBookId = Collections.max(
+                bookIdCounts.entrySet(),
+                Map.Entry.comparingByValue()
+        ).getKey();
+
+        Book bookOfMonth = firebaseContext.getBookById(mostPopularBookId);
+
+
+        if (bookOfMonth == null) {
+            setNoImagePlaceholder(bookOfTheDayImage);
+            return;
+        }
+
+        bookOfTheMonthTitle.setText(bookOfMonth.getTitle());
+        bookOfTheMonthAuthor.setText("Authors: " + bookOfMonth.getAuthors());
+        bookOfTheMonthGenre.setText("Genres: " + bookOfMonth.getGenres());
+
+        if (bookOfMonth.getCoverImageUrl() == null || bookOfMonth.getCoverImageUrl().isBlank()) {
+            setNoImagePlaceholder(bookOfTheMonthImage);
+            return;
+        }
+
+        String imageUrl = bookOfMonth.getCoverImageUrl();
+
             Image urlImage = new Image(imageUrl);
             if (urlImage.isError()) {
                 setNoImagePlaceholder(bookOfTheMonthImage);
