@@ -74,7 +74,6 @@ public class MainController {
             Book bookOfDay = books[0];
             Book bookOfMonth = books[1];
 
-            //these are here incase it fails
             if (bookOfDay != null) {
 
                 bookOfDayTitle.setText(bookOfDay.getTitle());
