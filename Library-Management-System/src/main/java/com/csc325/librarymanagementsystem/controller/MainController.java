@@ -28,6 +28,11 @@ public class MainController {
             new Image(getClass().getResourceAsStream("/com/csc325/librarymanagementsystem/images/no-image.png"));
     private final FirebaseContext firebaseContext = new FirebaseContext();
 
+    // cached so when changing controller instances the books dont or rehit the firestore every time you reopen the main page
+    private static Book cachedBookOfDay;
+    private static Book cachedBookOfMonth;
+    
+
     @FXML private Button searchButton;
     @FXML private Button cartButton;
     @FXML private Button loansButton;
@@ -77,6 +82,8 @@ public class MainController {
             if (bookOfDay != null) {
 
                 bookOfDayTitle.setText(bookOfDay.getTitle());
+                bookOfDayAuthor.setText("Authors: " + bookOfDay.getAuthors());
+                bookOfDayGenre.setText("Genres: " + bookOfDay.getGenres());
 
                 loadCoverImageOrPlaceholder(
                         bookOfTheDayImage,
@@ -87,6 +94,9 @@ public class MainController {
             if (bookOfMonth != null) {
 
                 bookOfTheMonthTitle.setText(bookOfMonth.getTitle());
+                bookOfTheMonthAuthor.setText("Authors: " + bookOfMonth.getAuthors());
+                bookOfTheMonthGenre.setText("Genres: " + bookOfMonth.getGenres());
+
                 loadCoverImageOrPlaceholder(
                         bookOfTheMonthImage,
                         bookOfMonth.getCoverImageUrl()
@@ -100,86 +110,24 @@ public class MainController {
         new Thread(loadTask).start();
     }
 
-   /* private void loadBookOfTheDay() {
-        int bookCollectionSize = firebaseContext.getCollectionSize(FirebaseContext.BOOKS_COLLECTION);
-        int positionInCollection = (int) (Math.random() * (bookCollectionSize));
-        Book bookOfDay = firebaseContext.getBookAt(positionInCollection);
-
-        if (bookOfDay == null) {
-            setNoImagePlaceholder(bookOfTheDayImage);
-            return;
-        }
-
-        bookOfDayTitle.setText(bookOfDay.getTitle());
-
-
-        loadCoverImageOrPlaceholder(bookOfTheDayImage, bookOfDay.getCoverImageUrl());
-    }
-*/
-
-    //if these get methods arent to your liking let me know
     private Book getBookOfTheDay() {
 
-        int bookCollectionSize =
-                firebaseContext.getCollectionSize(FirebaseContext.BOOKS_COLLECTION);
+        if (cachedBookOfDay != null) {
+            return cachedBookOfDay;
+        }
 
-        int positionInCollection =
-                (int) (Math.random() * (bookCollectionSize));
+        int bookCollectionSize = firebaseContext.getCollectionSize(FirebaseContext.BOOKS_COLLECTION);
+        int positionInCollection = (int) (Math.random() * (bookCollectionSize));
 
-        return firebaseContext.getBookAt(positionInCollection);
+        cachedBookOfDay = firebaseContext.getBookAt(positionInCollection);
+        return cachedBookOfDay;
     }
 
-    /*private void loadBookOfTheMonthImage() {
-        Date currentDate = new Date(); // todays date
-        Calendar oneMonthBeforeCurrentCalendar = Calendar.getInstance();
-        oneMonthBeforeCurrentCalendar.setTime(currentDate);
-        oneMonthBeforeCurrentCalendar.add(Calendar.MONTH, -1);
-        Date oneMonthBeforeCurrentDate = oneMonthBeforeCurrentCalendar.getTime(); // date one month before today
-
-
-        List<CheckoutConfirmation> checkoutsPastMonth = firebaseContext.checkouts()
-                .getCheckoutConfirmationsBetween(oneMonthBeforeCurrentDate, currentDate);
-
-
-        // using the list of the past months checkoutconfirmations, count how many times each unique bookId is present within each
-        Map<String, Integer> bookIdCounts = new HashMap<>();
-        for (CheckoutConfirmation checkout : checkoutsPastMonth) {
-            List<String> bookIds = checkout.getBookIds();
-            for (String bookId : bookIds) {
-                if (!bookIdCounts.containsKey(bookId)) {
-                    bookIdCounts.put(bookId, 0);
-                }
-                bookIdCounts.put(bookId, bookIdCounts.get(bookId) + 1);
-            }
-        }
-
-        // Get the highest count bookId from the (bookId, foundCount) key,value HashMap loop above.
-        String mostPopularBookId = bookIdCounts.entrySet()
-                                               .stream()
-                                               .max(Map.Entry.comparingByValue()) //compare all key - values with eachother and get max
-                                               .map(Map.Entry::getKey) // same as a lambda doing "entry -> entry.getKey()"
-                                               .orElse(null);
-        if (bookIdCounts.isEmpty()) {
-            setNoImagePlaceholder(bookOfTheMonthImage);
-            return;
-        }
-
-        Book bookOfMonth = firebaseContext.getBookById(mostPopularBookId);
-
-        // check if book itself is null first so we dont try and set null values for the title, author, and genre
-        if (bookOfMonth == null) {
-            setNoImagePlaceholder(bookOfTheMonthImage);
-            return;
-        }
-
-        bookOfTheMonthTitle.setText(bookOfMonth.getTitle());
-        bookOfTheMonthAuthor.setText("Authors: " + bookOfMonth.getAuthors());
-        bookOfTheMonthGenre.setText("Genres: " + bookOfMonth.getGenres());
-
-        loadCoverImageOrPlaceholder(bookOfTheMonthImage, bookOfMonth.getCoverImageUrl());
-    }
-*/
     private Book getBookOfTheMonth() {
+
+        if (cachedBookOfMonth != null) {
+            return cachedBookOfMonth;
+        }
 
         Date currentDate = new Date();
 
@@ -187,16 +135,13 @@ public class MainController {
         oneMonthBeforeCurrentCalendar.setTime(currentDate);
         oneMonthBeforeCurrentCalendar.add(Calendar.MONTH, -1);
 
-        Date oneMonthBeforeCurrentDate =
-                oneMonthBeforeCurrentCalendar.getTime();
+        Date oneMonthBeforeCurrentDate = oneMonthBeforeCurrentCalendar.getTime();
 
         List<CheckoutConfirmation> checkoutsPastMonth =
                 firebaseContext.checkouts()
-                        .getCheckoutConfirmationsBetween(
-                                oneMonthBeforeCurrentDate,
-                                currentDate
-                        );
+                        .getCheckoutConfirmationsBetween(oneMonthBeforeCurrentDate, currentDate);
 
+        // using the list of the past months checkoutconfirmations, count how many times each unique bookId is present within each
         Map<String, Integer> bookIdCounts = new HashMap<>();
 
         for (CheckoutConfirmation checkout : checkoutsPastMonth) {
@@ -206,11 +151,7 @@ public class MainController {
                 if (!bookIdCounts.containsKey(bookId)) {
                     bookIdCounts.put(bookId, 0);
                 }
-
-                bookIdCounts.put(
-                        bookId,
-                        bookIdCounts.get(bookId) + 1
-                );
+                bookIdCounts.put(bookId, bookIdCounts.get(bookId) + 1);
             }
         }
 
@@ -218,15 +159,18 @@ public class MainController {
             return null;
         }
 
+        // Get the highest count bookId from the (bookId, foundCount) key,value HashMap loop above.
         String mostPopularBookId =
                 bookIdCounts.entrySet()
                         .stream()
-                        .max(Map.Entry.comparingByValue())
-                        .map(Map.Entry::getKey)
+                        .max(Map.Entry.comparingByValue())//compare all key - values with eachother and get max
+                        .map(Map.Entry::getKey)// same as a lambda doing "entry -> entry.getKey()"
                         .orElse(null);
 
-        return firebaseContext.getBookById(mostPopularBookId);
+        cachedBookOfMonth = firebaseContext.getBookById(mostPopularBookId);
+        return cachedBookOfMonth;
     }
+
     private void loadCoverImageOrPlaceholder(ImageView imageView, String imageUrl) {
         imageView.setImage(defaultBookImage);
 
