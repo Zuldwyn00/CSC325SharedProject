@@ -198,15 +198,6 @@ public class MainController {
         });
     }
 
-    private void setNoImagePlaceholder(ImageView imageView) {
-        URL noImageResource = getClass().getResource("/com/csc325/librarymanagementsystem/images/noimage.png");
-        if (noImageResource == null) {
-            imageView.setImage(null);
-            return;
-        }
-        imageView.setImage(new Image(noImageResource.toExternalForm()));
-    }
-
     @FXML
     private void searchButtonOnAction() {
         navigateTo("/com/csc325/librarymanagementsystem/SearchScreen.fxml", searchButton);
