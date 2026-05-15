@@ -246,6 +246,11 @@ public class SearchController {
         navigateTo("/com/csc325/librarymanagementsystem/LoginScreen.fxml", signOutButton);
     }
 
+    @FXML
+    private void onNotificationClicked(){
+        navigateTo("/com/csc325/librarymanagementsystem/NotificationScreen.fxml", notificationButton);
+    }
+
 
 
 

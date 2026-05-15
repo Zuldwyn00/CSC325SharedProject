@@ -1,53 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="400.0"
-            minWidth="600.0"
-            prefHeight="700.0"
-            prefWidth="1100.0"
-            stylesheets="@style.css"
-            styleClass="root-pane"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.csc325.librarymanagementsystem.controller.MainController">
+<AnchorPane minHeight="400.0" minWidth="600.0" prefHeight="700.0" prefWidth="1100.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.csc325.librarymanagementsystem.controller.MainController">
 
     <children>
 
-        <BorderPane AnchorPane.topAnchor="0.0"
-                    AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0">
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
             <top>
-                <HBox alignment="CENTER_LEFT"
-                      prefHeight="55.0"
-                      prefWidth="600.0"
-                      styleClass="top-bar">
+                <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="600.0" styleClass="top-bar">
 
                     <children>
                         <Region prefWidth="10.0" />
 
-                        <Label text="Library" styleClass="app-title" />
+                        <Label styleClass="app-title" text="Library" />
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <Label fx:id="welcomeLabel"
-                               text="Welcome, John!"
-                               styleClass="top-subtitle" />
+                        <Label fx:id="welcomeLabel" styleClass="top-subtitle" text="Welcome, John!" />
 
                         <Region prefWidth="16.0" />
 
-                        <Button fx:id="notificationButton"
-                                text="Notifications"
-                                mnemonicParsing="false"
-                                styleClass="top-button"
-                                prefHeight="55.0"
-                                prefWidth="86.0" />
+                        <Button fx:id="notificationButton" mnemonicParsing="false" onAction="#onNotificationClicked" prefHeight="55.0" prefWidth="86.0" styleClass="top-button" text="Notifications" />
 
                         <Region prefWidth="8.0" />
                     </children>
@@ -55,9 +40,7 @@
             </top>
 
             <left>
-                <VBox prefHeight="345.0"
-                      prefWidth="156.0"
-                      styleClass="side-bar">
+                <VBox prefHeight="345.0" prefWidth="156.0" styleClass="side-bar">
 
                     <padding>
                         <Insets left="10.0" top="10.0" />
@@ -65,7 +48,7 @@
 
                     <children>
 
-                        <Label text="MENU" styleClass="menu-label" />
+                        <Label styleClass="menu-label" text="MENU" />
 
                         <Separator prefWidth="164.0">
                             <VBox.margin>
@@ -73,36 +56,13 @@
                             </VBox.margin>
                         </Separator>
 
-                        <Button fx:id="homeButton"
-                                text="Home"
-                                mnemonicParsing="false"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="menu-button-active" />
+                        <Button fx:id="homeButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button-active" text="Home" />
 
-                        <Button fx:id="searchButton"
-                                text="Search Books"
-                                mnemonicParsing="false"
-                                onAction="#searchButtonOnAction"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="menu-button" />
+                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonOnAction" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Search Books" />
 
-                        <Button fx:id="cartButton"
-                                text="My Cart"
-                                mnemonicParsing="false"
-                                onAction="#onCartClicked"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="menu-button" />
+                        <Button fx:id="cartButton" mnemonicParsing="false" onAction="#onCartClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="My Cart" />
 
-                        <Button fx:id="loansButton"
-                                text="Active Loans"
-                                mnemonicParsing="false"
-                                onAction="#onLoansClicked"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="menu-button" />
+                        <Button fx:id="loansButton" mnemonicParsing="false" onAction="#onLoansClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Active Loans" />
 
 
                         <Region VBox.vgrow="ALWAYS" />
@@ -113,146 +73,78 @@
                             </VBox.margin>
                         </Separator>
 
-                        <Button fx:id="profileButton"
-                                text="Profile"
-                                mnemonicParsing="false"
-                                onAction="#onProfileClicked"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="menu-button" />
+                        <Button fx:id="profileButton" mnemonicParsing="false" onAction="#onProfileClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Profile" />
 
 
-                        <Button fx:id="signOutButton"
-                                text="Sign Out"
-                                mnemonicParsing="false"
-                                onAction="#onSignOutClicked"
-                                prefHeight="34.0"
-                                prefWidth="143.0"
-                                styleClass="sign-out-button" />
+                        <Button fx:id="signOutButton" mnemonicParsing="false" onAction="#onSignOutClicked" prefHeight="34.0" prefWidth="143.0" styleClass="sign-out-button" text="Sign Out" />
 
                     </children>
                 </VBox>
             </left>
 
             <center>
-                <VBox prefHeight="345.0"
-                      prefWidth="444.0"
-                      spacing="16.0"
-                      styleClass="content-pane">
+                <VBox prefHeight="345.0" prefWidth="444.0" spacing="16.0" styleClass="content-pane">
 
                     <padding>
-                        <Insets bottom="24.0"
-                                left="24.0"
-                                right="24.0"
-                                top="24.0" />
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
                     </padding>
 
                     <children>
 
-                        <Label text="Welcome to the Library!"
-                               styleClass="page-title" />
+                        <Label styleClass="page-title" text="Welcome to the Library!" />
 
-                        <Label text="What would you like to do today?"
-                               styleClass="page-subtitle" />
+                        <Label styleClass="page-subtitle" text="What would you like to do today?" />
 
                         <Separator />
 
-                        <HBox alignment="CENTER"
-                              spacing="24.0"
-                              VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER" spacing="24.0" VBox.vgrow="ALWAYS">
 
                             <children>
 
-                                <VBox alignment="TOP_CENTER"
-                                      maxWidth="Infinity"
-                                      spacing="14.0"
-                                      styleClass="feature-image-card"
-                                      HBox.hgrow="ALWAYS">
+                                <VBox alignment="TOP_CENTER" maxWidth="Infinity" spacing="14.0" styleClass="feature-image-card" HBox.hgrow="ALWAYS">
 
                                     <children>
 
-                                        <Label text="Book of The Day"
-                                               styleClass="feature-image-title" />
+                                        <Label styleClass="feature-image-title" text="Book of The Day" />
 
-                                        <StackPane alignment="CENTER"
-                                                   maxWidth="Infinity"
-                                                   prefHeight="360.0"
-                                                   styleClass="feature-image-frame"
-                                                   VBox.vgrow="ALWAYS">
+                                        <StackPane alignment="CENTER" maxWidth="Infinity" prefHeight="360.0" styleClass="feature-image-frame" VBox.vgrow="ALWAYS">
                                             <children>
-                                                <ImageView fx:id="bookOfTheDayImage"
-                                                           fitHeight="320.0"
-                                                           fitWidth="320.0"
-                                                           preserveRatio="true"
-                                                           smooth="true" />
+                                                <ImageView fx:id="bookOfTheDayImage" fitHeight="320.0" fitWidth="320.0" preserveRatio="true" smooth="true" />
                                             </children>
                                         </StackPane>
 
-                                        <VBox alignment="CENTER"
-                                              spacing="6.0">
+                                        <VBox alignment="CENTER" spacing="6.0">
                                             <children>
-                                                <Label fx:id="bookOfDayTitle"
-                                                       text="Book Title"
-                                                       wrapText="true"
-                                                       styleClass="card-title" />
+                                                <Label fx:id="bookOfDayTitle" styleClass="card-title" text="Book Title" wrapText="true" />
 
-                                                <Label fx:id="bookOfDayAuthor"
-                                                       text="Author Name"
-                                                       wrapText="true"
-                                                       styleClass="page-subtitle" />
+                                                <Label fx:id="bookOfDayAuthor" styleClass="page-subtitle" text="Author Name" wrapText="true" />
 
-                                                <Label fx:id="bookOfDayGenre"
-                                                       text="Genre"
-                                                       wrapText="true"
-                                                       styleClass="small-muted" />
+                                                <Label fx:id="bookOfDayGenre" styleClass="small-muted" text="Genre" wrapText="true" />
                                             </children>
                                         </VBox>
 
                                     </children>
                                 </VBox>
 
-                                <VBox alignment="TOP_CENTER"
-                                      maxWidth="Infinity"
-                                      spacing="14.0"
-                                      styleClass="feature-image-card"
-                                      HBox.hgrow="ALWAYS">
+                                <VBox alignment="TOP_CENTER" maxWidth="Infinity" spacing="14.0" styleClass="feature-image-card" HBox.hgrow="ALWAYS">
 
                                     <children>
 
-                                        <Label text="Book of The Month"
-                                               styleClass="feature-image-title" />
+                                        <Label styleClass="feature-image-title" text="Author of The Month" />
 
-                                        <StackPane alignment="CENTER"
-                                                   maxWidth="Infinity"
-                                                   prefHeight="360.0"
-                                                   styleClass="feature-image-frame"
-                                                   VBox.vgrow="ALWAYS">
+                                        <StackPane alignment="CENTER" maxWidth="Infinity" prefHeight="360.0" styleClass="feature-image-frame" VBox.vgrow="ALWAYS">
                                             <children>
-                                                <ImageView fx:id="bookOfTheMonthImage"
-                                                           fitHeight="320.0"
-                                                           fitWidth="320.0"
-                                                           preserveRatio="true"
-                                                           smooth="true" />
+                                                <ImageView fx:id="authorOfTheMonthImage" fitHeight="320.0" fitWidth="320.0" preserveRatio="true" smooth="true" />
                                             </children>
                                         </StackPane>
 
-                                        <VBox alignment="CENTER"
-                                              spacing="6.0">
+                                        <VBox alignment="CENTER" spacing="6.0">
                                             <children>
-                                                <Label fx:id="bookOfTheMonthTitle"
-                                                       text="Book Title"
-                                                       wrapText="true"
-                                                       styleClass="card-title" />
+                                                <Label fx:id="authorOfTheMonthTitle" styleClass="card-title" text="Book Title" wrapText="true" />
 
-                                                <Label fx:id="bookOfTheMonthAuthor"
-                                                       text="Author Name"
-                                                       wrapText="true"
-                                                       styleClass="page-subtitle" />
+                                                <Label fx:id="authorOfTheMonthAuthor" styleClass="page-subtitle" text="Author Name" wrapText="true" />
 
-                                                <Label fx:id="bookOfTheMonthGenre"
-                                                       text="Genre"
-                                                       wrapText="true"
-                                                       styleClass="small-muted" />
+                                                <Label fx:id="authorOfTheMonthGenre" styleClass="small-muted" text="Genre" wrapText="true" />
                                             </children>
                                         </VBox>
 
