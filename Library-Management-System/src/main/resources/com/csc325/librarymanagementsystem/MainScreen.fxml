@@ -56,6 +56,8 @@
                             </VBox.margin>
                         </Separator>
 
+                        <Button fx:id="homeButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button-active" text="Home" />
+
                         <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonOnAction" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="Search Books" />
 
                         <Button fx:id="cartButton" mnemonicParsing="false" onAction="#onCartClicked" prefHeight="34.0" prefWidth="143.0" styleClass="menu-button" text="My Cart" />
