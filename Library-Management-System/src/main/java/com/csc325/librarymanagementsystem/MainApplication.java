@@ -21,7 +21,7 @@ public class MainApplication extends Application {
         scheduleNotifications(notificationService, firebase);
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("LoginScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1100, 700);
+        Scene scene = new Scene(fxmlLoader.load(), 1100, 800);
         stage.setTitle("Library Management System");
         stage.setScene(scene);
         stage.show();
