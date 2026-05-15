@@ -18,6 +18,7 @@ public class FirebaseContext {
     private final LoanContext loans;
     private final CheckoutContext checkouts;
     private final UserContext users;
+    private final NotificationContext notifications;
 
     public List<Book> getAllBooks() {
         List<Book> bookList = new ArrayList<>();
@@ -177,11 +178,14 @@ public class FirebaseContext {
 
     public UserContext users() { return users; }
 
+    public NotificationContext notifications() { return notifications; }
+
     public FirebaseContext() {
         this.db = FirebaseInitializer.getFirestore();
         this.loans = new LoanContext(db);
         this.checkouts = new CheckoutContext(db);
         this.users = new UserContext(db);
+        this.notifications = new NotificationContext(db);
     }
 
 
