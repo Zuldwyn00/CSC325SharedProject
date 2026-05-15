@@ -22,9 +22,7 @@ class FirebaseContextTest {
         if (books.isEmpty()) {
             System.out.println("No books found in Firebase.");
         } else {
-            for (Book book : books) {
-                System.out.println(book);
-            }
+            System.out.println(books.size() + " books found in Firebase.");
         }
     }
 

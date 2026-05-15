@@ -2,6 +2,7 @@ package com.csc325.librarymanagementsystem.controller;
 
 import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import com.csc325.librarymanagementsystem.model.Loan;
+import com.csc325.librarymanagementsystem.service.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,6 +32,7 @@ public class LoanController {
     @FXML
     private void initialize(){
         firebase = new FirebaseContext();
+        setWelcomeLabel(Session.getCurrentUser().getUserId());
 
         loanListView.setCellFactory(listView -> new ListCell<>(){
             @Override

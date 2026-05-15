@@ -42,4 +42,18 @@ class AuthServiceTest {
         assertEquals(expectedUser.getLibraryId(), actualUser.getLibraryId());
         assertEquals(expectedUser.getEmail(), actualUser.getEmail());
     }
+
+    @Test
+    void registerRejectsDuplicateEmail() {
+        List<User> users = FakeData.getUsers();
+        AuthService authService = new AuthService();
+        FirebaseContext firebase = new FirebaseContext();
+
+        User existingUser = users.get(0);
+        User duplicate = new User();
+        duplicate.setEmail(existingUser.getEmail());
+        duplicate.setLibraryPin("9999");
+
+        assertEquals(RegisterResult.USER_ALREADY_EXISTS, authService.register(firebase, duplicate));
+    }
 }

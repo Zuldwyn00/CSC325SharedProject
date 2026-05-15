@@ -21,6 +21,9 @@ public class UserContext {
     }
 
     //IMPORTANT: If userId && libaryId is null/blank, firestore generates one, and it is set in the in-memory object so it can still be used downstream
+    // you should leave these null when recording a user unless you have a reason to manually set them
+
+    // We check for duplicate users in the AuthService which is what is used to call recordUser properly.
     public boolean recordUser(User user) {
         if (user == null) {
             throw new IllegalArgumentException("user cannot be null.");
