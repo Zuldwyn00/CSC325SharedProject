@@ -9,18 +9,18 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class UserContext {
     public static final String USERS_COLLECTION = "user";
-
     private final Firestore firestore;
 
     public UserContext(Firestore firestore) {
         this.firestore = firestore;
     }
 
-    // Add a user to firestore - If userId is null/blank, firestore generates one and it is set in the in-memory object so it can still be used downstream
+    //IMPORTANT: If userId && libaryId is null/blank, firestore generates one, and it is set in the in-memory object so it can still be used downstream
     public boolean recordUser(User user) {
         if (user == null) {
             throw new IllegalArgumentException("user cannot be null.");
@@ -34,6 +34,13 @@ public class UserContext {
             userDocument = firestore.collection(USERS_COLLECTION).document(user.getUserId());
         }
 
+        // in a production system we would need to ensure the libraryId is unique
+        // for this project we are just going with statistical randomness using a high enough value
+        // to ensure its random
+        if (user.getLibraryId() == null || user.getLibraryId().isBlank()) {
+            user.setLibraryId(generateLibraryId());
+        }
+
         try {
             userDocument.create(user).get();
             return true;
@@ -41,6 +48,12 @@ public class UserContext {
             System.err.println("Error recording user " + user.getUserId() + ": " + e.getMessage());
             return false;
         }
+    }
+
+    // Generates a random 12 digit number for the libraryId
+    private String generateLibraryId() {
+        long id = 100_000_000_000L + (long) (new Random().nextDouble() * 900_000_000_000L);
+        return String.valueOf(id);
     }
 
     public User findUserByUserId(String userId) {
