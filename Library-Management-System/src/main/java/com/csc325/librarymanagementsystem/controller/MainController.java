@@ -214,15 +214,9 @@ public class MainController {
         navigateTo("/com/csc325/librarymanagementsystem/LoanScreen.fxml", loansButton);
     }
 
-    @FXML
-    private void onCheckoutClicked() {
-        navigateTo("/com/csc325/librarymanagementsystem/CheckoutScreen.fxml", checkoutButton);
-    }
-
     @FXML private void onProfileClicked()  {
         navigateTo("/com/csc325/librarymanagementsystem/ProfileScreen.fxml", profileButton);
     }
-    @FXML private void onSettingsClicked() { System.out.println("Settings clicked"); }
 
     @FXML
     private void onSignOutClicked() {
