@@ -179,6 +179,11 @@ public class CartService {
             throw new CheckoutException("Checkout failed: could not save checkout confirmation.");
         }
 
+        NotificationService notificationService =
+                new NotificationService(new EmailService());
+
+        notificationService.sendCheckoutConfirmation(user, confirmation);
+
         cart.clearCart();
 
         return confirmation;
