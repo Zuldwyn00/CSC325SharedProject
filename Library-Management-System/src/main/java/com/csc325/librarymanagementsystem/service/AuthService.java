@@ -24,21 +24,24 @@ public class AuthService {
         return null;
     }
 
-    public boolean register(FirebaseContext firebase, User user) {
+    public RegisterResult register(FirebaseContext firebase, User user) {
         if (firebase == null || user == null) {
-            return false;
+            return RegisterResult.FAILED;
         }
 
         // prevent creating duplicate accounts on the same libraryId/email.
         if (user.getLibraryId() != null && !user.getLibraryId().isBlank()
                 && firebase.users().findUserByIdentifier(user.getLibraryId()) != null) {
-            return false;
+            return RegisterResult.USER_ALREADY_EXISTS;
         }
         if (user.getEmail() != null && !user.getEmail().isBlank()
                 && firebase.users().findUserByIdentifier(user.getEmail()) != null) {
-            return false;
+            return RegisterResult.USER_ALREADY_EXISTS;
         }
 
-        return firebase.users().recordUser(user);
+        if (firebase.users().recordUser(user)) {
+            return RegisterResult.SUCCESS;
+        }
+        return RegisterResult.FAILED;
     }
 }
