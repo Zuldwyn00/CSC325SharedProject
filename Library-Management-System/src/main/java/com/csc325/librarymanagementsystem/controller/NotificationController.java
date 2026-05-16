@@ -25,12 +25,14 @@ public class NotificationController {
     @FXML private Button refreshButton;
     @FXML private ListView<String> notificationListView;
     @FXML private Label messageLabel;
+    @FXML private Label welcomeLabel;
 
     private final NotificationService notificationService =
             new NotificationService(new EmailService());
 
     @FXML
     public void initialize() {
+        welcomeLabel.setText("Welcome, " + Session.getCurrentUser().getEmail());
         loadNotifications();
     }
 

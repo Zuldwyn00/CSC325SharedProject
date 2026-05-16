@@ -32,7 +32,7 @@ public class LoanController {
     @FXML
     private void initialize(){
         firebase = new FirebaseContext();
-        setWelcomeLabel(Session.getCurrentUser().getUserId());
+        setWelcomeLabel(Session.getCurrentUser().getEmail());
 
         loanListView.setCellFactory(listView -> new ListCell<>(){
             @Override
@@ -53,12 +53,14 @@ public class LoanController {
             }
 
         });
+
+        loadLoans(Session.getCurrentUser().getUserId());
     }
 
     public void loadLoans(String userId){
         List<Loan> loans = firebase.loans().getActiveLoans(userId);
         loanListView.getItems().setAll(loans);
-        loanCounterLabel.setText(loans.size() + "Active Loan" + (loans.size() == 1 ? "" : "s"));
+        loanCounterLabel.setText(loans.size() + " Active Loan" + (loans.size() == 1 ? "" : "s"));
     }
 
     public void setWelcomeLabel(String name){

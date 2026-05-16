@@ -33,13 +33,16 @@ public class CartController {
     @FXML private Button loansButton;
     @FXML private Button profileButton;
     @FXML private Button notificationButton;
+    @FXML private Label welcomeLabel;
 
     private final CartService cartService = new CartService();
     private final Image defaultBookImage =
             new Image(getClass().getResourceAsStream("/com/csc325/librarymanagementsystem/images/no-image.png"));
     private final java.util.Map<String, Image> imageCache = new java.util.HashMap<>();
+
     @FXML
     public void initialize() {
+        welcomeLabel.setText("Welcome, " + Session.getCurrentUser().getEmail());
         setupCartCells();
         refreshCart();
     }
