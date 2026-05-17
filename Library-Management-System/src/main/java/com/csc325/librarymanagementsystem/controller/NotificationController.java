@@ -4,6 +4,7 @@ import com.csc325.librarymanagementsystem.model.Notification;
 import com.csc325.librarymanagementsystem.service.EmailService;
 import com.csc325.librarymanagementsystem.service.NotificationService;
 import com.csc325.librarymanagementsystem.service.Session;
+import com.csc325.librarymanagementsystem.data.FirebaseContext;
 import java.text.SimpleDateFormat;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import java.util.Date;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
 
 public class NotificationController {
     @FXML private Button homeButton;
@@ -33,9 +38,12 @@ public class NotificationController {
     @FXML
     public void initialize() {
         welcomeLabel.setText("Welcome, " + Session.getCurrentUser().getEmail());
+
+        notificationService.sendDueSoonAlerts(new FirebaseContext(), 3);
+        notificationService.sendOverdueAlerts(new FirebaseContext());
+
         loadNotifications();
     }
-
     private void loadNotifications() {
         notificationListView.getItems().clear();
 
@@ -46,21 +54,61 @@ public class NotificationController {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy h:mm a");
 
-        for (Notification notification : notificationService.getNotificationsForUser(Session.getCurrentUser())) {
-            String status = notification.isRead() ? "[Read] " : "[New] ";
-            String dateText = notification.getCreatedAt() == null
-                    ? ""
-                    : " | " + dateFormat.format(notification.getCreatedAt());
+        List<Notification> notifications =
+                notificationService.getNotificationsForUser(Session.getCurrentUser());
 
-            notificationListView.getItems().add(
-                    status + notification.getMessage() + dateText
-            );
+        notifications.sort(Comparator.comparing(
+                Notification::getCreatedAt,
+                Comparator.nullsLast(Comparator.reverseOrder())
+        ));
+
+        Date recentCutoff = new Date(System.currentTimeMillis() - (10 * 60 * 1000));
+
+        List<Notification> newThisSession = new ArrayList<>();
+        List<Notification> previousNew = new ArrayList<>();
+        List<Notification> readNotifications = new ArrayList<>();
+
+        for (Notification notification : notifications) {
+            if (notification.isRead()) {
+                readNotifications.add(notification);
+            } else if (notification.getCreatedAt() != null &&
+                    !notification.getCreatedAt().before(recentCutoff)) {
+                newThisSession.add(notification);
+            } else {
+                previousNew.add(notification);
+            }
         }
+
+        addNotificationSection("──────── New this session ────────", newThisSession, dateFormat);
+        addNotificationSection("──────── Previous unread ────────", previousNew, dateFormat);
+        addNotificationSection("──────── Read notifications ────────", readNotifications, dateFormat);
 
         if (notificationListView.getItems().isEmpty()) {
             messageLabel.setText("No notifications.");
         } else {
             messageLabel.setText("");
+        }
+    }
+    private void addNotificationSection(String sectionTitle,
+                                        List<Notification> notifications,
+                                        SimpleDateFormat dateFormat) {
+        if (notifications.isEmpty()) {
+            return;
+        }
+
+        notificationListView.getItems().add(sectionTitle);
+
+        for (Notification notification : notifications) {
+            String status = notification.isRead() ? "READ  " : "NEW   ";
+
+            String dateText = notification.getCreatedAt() == null
+                    ? "No date"
+                    : dateFormat.format(notification.getCreatedAt());
+
+            notificationListView.getItems().add(
+                    status + dateText + "\n" +
+                            notification.getMessage()
+            );
         }
     }
 
@@ -101,9 +149,11 @@ public class NotificationController {
         loadNotifications();
         messageLabel.setText("All notifications marked as read.");
     }
-
     @FXML
     private void onRefreshClicked() {
+        notificationService.sendDueSoonAlerts(new FirebaseContext(), 3);
+        notificationService.sendOverdueAlerts(new FirebaseContext());
+
         loadNotifications();
     }
 
